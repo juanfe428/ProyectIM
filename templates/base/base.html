@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/pruebita25.css')}}">
+
+	
+
+	<title> {% block title %} {% endblock %} </title>
+</head>
+<body>
+	{% with message=get_flashed_messages() %}
+		{% if messages %}
+			<ul>
+				{% for message in messages %}
+					<div> class="alert alert-success"
+					</div>
+				{% endfor%}
+			</ul>
+		{% endif %}
+
+	{% endwith %}
+	{% block body %}
+	{% endblock %}
+
+	<footer>
+		<div class="container">
+			<div class="row">
+				<p class="copyright text-muted">&copy;Curso Flak</p>
+			</div>
+		</div>
+	</footer>
+
+</body>
+</html>
