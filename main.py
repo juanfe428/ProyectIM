@@ -57,7 +57,7 @@ def login_page():
     return render_template("login.html",form=comment_form)
 @app.route('/home')
 def home():
-    return 'funciono!!!'
+    return render_template("home.html")
 
 
 if __name__ == '__main__':
