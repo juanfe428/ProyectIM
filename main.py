@@ -36,14 +36,13 @@ def login_page():
     if request.method== 'POST' and comment_form.validate():
 
 
-
-
         username=comment_form.username.data
         password=comment_form.password.data
 
         user=User.query.filter_by(username=username).first()
 
-        if User is not None and user.verify_password(password):
+        if User is not None and user.verify_password(password)==True:
+
 
             pass
             mensaje='Bienvenido'
