@@ -39,10 +39,9 @@ def login_page():
         username=comment_form.username.data
         password=comment_form.password.data
 
-        user=User.query.filter_by(username=username).first()
+        user=User.query.filter_by(username=username).first_or_404()
 
         if User is not None and user.verify_password(password)==True:
-
 
             pass
             mensaje='Bienvenido'
@@ -58,7 +57,9 @@ def login_page():
 def home():
     return render_template("home.html")
 
-
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect(url_for('index'))
 if __name__ == '__main__':
     csrf.init_app(app)
     db.init_app(app)
