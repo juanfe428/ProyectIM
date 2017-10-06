@@ -1,8 +1,13 @@
 {% extends "base/base.html" %}
 
+{% block title %} {{ title }} {% endblock %}
 {% block body %}
 	{% from "_macro.html" import render_field %}       
 		<div class="container">
+
+			{% if error %}
+    			<p class=error><strong>Error:</strong> {{ error }}	
+  		    {% endif %}
 
 	      <form class="form-signin" method="post">
 	      		<input type="hidden" name="csrf_token" value="{{ csrf_token()}}"/>

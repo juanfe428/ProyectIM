@@ -13,11 +13,11 @@
 <body>
 	{% with message=get_flashed_messages() %}
 		{% if messages %}
-			<ul>
-				{% for message in messages %}
-					<div> class="alert alert-success"
-					</div>
-				{% endfor%}
+			<ul class="flashes">
+			{% for message in messages %}
+				
+				<li> {{message}} </li>
+			{% endfor%}
 			</ul>
 		{% endif %}
 
@@ -28,7 +28,7 @@
 	<footer>
 		<div class="container">
 			<div class="row">
-				<p class="copyright text-muted">&copy;Curso Flak</p>
+				<p class="copyright text-muted">&copy;tellme!</p>
 			</div>
 		</div>
 	</footer>
