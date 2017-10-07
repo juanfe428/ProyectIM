@@ -1,15 +1,17 @@
 {% extends "base/base.html" %}
 
+
 {% block title %} {{ title }} {% endblock %}
 {% block body %}
 	{% from "_macro.html" import render_field %}       
 		<div class="container">
 
+
 			{% if error %}
     			<p class=error><strong>Error:</strong> {{ error }}	
   		    {% endif %}
 
-	      <form class="form-signin" method="post">
+	     	<form class="form-signin" method="post">
 	      		<input type="hidden" name="csrf_token" value="{{ csrf_token()}}"/>
 		 		<h2 class="form-signin-heading">Iniciar sesión</h2>
 				{{ render_field(form.username, class="form-control", placeholder="Username") }}
@@ -18,7 +20,7 @@
 				<input class="btn btn-lg btn-primary btn-block" type="submit", value="Login">
 				<a href="{{ url_for('index') }}">Registrase</a>
 
-	      </form> 
+	      	</form> 
 	    </div>
 
 {% endblock %}
