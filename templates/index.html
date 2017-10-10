@@ -11,7 +11,6 @@
 
 	 	<form class="form-signin" method="post">
 	 		<h2 class="form-signin-heading">Regístrate</h2>
-            <input type="hidden" name="csrf_token" value="{{ csrf_token()}}"/>
 			{{ render_field(form.username, class="form-control", placeholder="Username") }}
 			<p class="help-block text-danger"></p>
 			{{ render_field(form.password, class="form-control", placeholder="Contrasena") }}

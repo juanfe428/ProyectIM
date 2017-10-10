@@ -12,7 +12,6 @@
   		    {% endif %}
 
 	     	<form class="form-signin" method="post">
-	      		<input type="hidden" name="csrf_token" value="{{ csrf_token()}}"/>
 		 		<h2 class="form-signin-heading">Iniciar sesión</h2>
 				{{ render_field(form.username, class="form-control", placeholder="Username") }}
 				<p class="help-block text-danger"></p>

@@ -24,3 +24,5 @@ class CommentForm(Form):
 class LoginForm(Form):
 	username=StringField('',[validators.length(min=4,max=25,message='Igrese un username valido')])
 	password =PasswordField('',[validators.DataRequired()])
+class Add(Form):
+    username=StringField('',[validators.length(min=4,max=25,message='Igrese un username valido')])

@@ -12,8 +12,7 @@ import json
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
-csrf=CSRFProtect()
-
+Usuario=False
 @app.route('/register', methods=['GET','POST'])
 def index():
     comment_form = forms.CommentForm(request.form)
@@ -45,18 +44,24 @@ def login_page():
             pass
             mensaje='Bienvenido'
             flash(mensaje)
+            Usuario=True
 
             return redirect(url_for('home'))
+
         else:
 
             error = 'Contraseña o usario incorrecto'
 
     return render_template("login.html",form=comment_form,title=title,error=error)
 
-@app.route('/home')
+@app.route('/home',methods=['GET','POST'])
 def home():
-
-    return render_template("home.html")
+    pass
+    comment_form = forms.LoginForm(request.form)
+    if request.method== 'POST':
+        user=User.query.filter_by(username=username).first_or_404()
+        return redirect(url_for('hola'))
+    return render_template("home.html", form=comment_form)
 @app.route('/prueba')
 def hola():
     return render_template("error.html")
@@ -66,7 +71,6 @@ def page_not_found(e):
     
     return render_template("error.html")
 if __name__ == '__main__':
-    csrf.init_app(app)
     db.init_app(app)
     with app.app_context():
     	db.create_all()
