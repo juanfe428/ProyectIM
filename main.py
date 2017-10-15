@@ -59,6 +59,7 @@ def home():
     pass
     comment_form = forms.LoginForm(request.form)
     if request.method== 'POST':
+        username=comment_form.username.data
         user=User.query.filter_by(username=username).first_or_404()
         return redirect(url_for('hola'))
     return render_template("home.html", form=comment_form)

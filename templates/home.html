@@ -21,6 +21,15 @@
 		 		$(".ventana").slideUp("slow");
 		 	}
 	    </script>
+	    <script>
+	    	function open(){
+		 		$(".ventana2").slideDown("slow");
+		 	}
+		 	function close(){
+		 		$(".ventana2").slideUp("slow");
+		 	}
+	    </script>
+
 
 		
 		<div class="ventana">
@@ -32,21 +41,47 @@
 					<center>
 						<h6>Ingresa nombre de usuario</h6>
 					</center>
-					<br>
-					{{ render_field(form.username, class="form-control", placeholder="Username") }}
-					<br>
+						<br>
+						{{ render_field(form.username, class="form-control", placeholder="Username") }}
+						<br>
 					<center>
 						
 						<input class="boton4" type="submit", value="Confirmar">
 					</center>
-
-
 						
 					</div>
 
 				</form>
 			</div>
+
 		</div>
+		<div class="ventana2">
+			<div class="form">
+				<div class="prueba">
+					<a href="javascript:close();" type="btn" aria-label="Close" class="close">&times;</a>
+					<p align="left">Contactos</p>
+					
+				</div>
+
+			  	<form method="post">
+					
+					<br>
+					<center>
+						<h6>Ingresa nombre de usuario</h6>
+					</center>
+					<br>
+					<br>
+					<center>
+						
+						<input class="boton4" type="submit", value="Confirmar">
+					</center>
+				</form>					
+			</div>
+		</div>
+
+
+
+
 		<div id="caja2">
 			<header>
 				
@@ -54,7 +89,7 @@
 				
 
 				<input href="javascript:openVentana();" class="boton3" type="submit", value="Chats">
-				<input class="boton2" type="submit", value="Contactos">
+				<input type="submit" class="boton2" onclick="location.href='javascript:open();';" value="Contactos" />
 				<input type="submit" class="boton" onclick="location.href='javascript:openVentana();';" value="Añadir" />
 				
 			</header><!-- /header -->
