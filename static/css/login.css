@@ -1,0 +1,27 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #5DB9FF;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.login{
+    top: 0;
+    right: 0;
+    position: absolute;
+}
+.boton1{
+        font-size:13px;
+        font-family:Segoe ,UI;
+        font-weight:bold;
+        color:black;
+        background:#139BA0;
+        border:0px;
+        margin: 0;
+        width:100px;
+        height:35px;
+       }

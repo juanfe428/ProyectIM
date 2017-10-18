@@ -17,7 +17,7 @@ Usuario=False
 def index():
     comment_form = forms.CommentForm(request.form)
     title = 'Tellme!'
-    flash('SDASD')
+    flash('SDASD') 
     if request.method== 'POST' and comment_form.validate():
     	
     	user=User(comment_form.username.data,
