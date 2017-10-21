@@ -1,0 +1,33 @@
+{% extends "base/base.html" %}
+
+{% block title %} {{ title }} {% endblock %}
+{% block body %}
+	{% from "_macro.html" import render_field %}
+	 <div class="login">
+	 	
+	 		<input type="submit" class="boton1" onclick="location.href='{{ url_for('login_page') }}';" value="Iniciar sesión" />	
+	 </div>	
+
+	
+
+	 <div class="container">
+
+
+
+	 	<form class="form-signin" method="post">
+	 		<h2 class="form-signin-heading">Regístrate</h2>
+			{{ render_field(form.username, class="form-control", placeholder="Username") }}
+			<p class="help-block text-danger"></p>
+			{{ render_field(form.password, class="form-control", placeholder="Contrasena") }}
+			<p class="help-block text-danger"></p>
+			{{ render_field(form.confirm, class="form-control", placeholder="Confirmar contraseña") }}
+			<p class="help-block text-danger"></p>
+			<input class="boton2" type="submit", value="Login">
+			
+
+
+		</form>
+     </div>
+
+
+{% endblock %}

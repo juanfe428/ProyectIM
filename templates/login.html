@@ -1,0 +1,31 @@
+{% extends "base/base.html" %}
+
+
+{% block title %} {{ title }} {% endblock %}
+{% block body %}
+	{% from "_macro.html" import render_field %}
+      
+		<div class="container">
+			<div class="login">
+	 	
+	 		<input type="submit" class="boton1" onclick="location.href='{{ url_for('index') }}';" value="Registrarse" />	
+	 	</div>	
+
+
+			{% if error %}
+    			<p class=error><strong>Error:</strong> {{ error }}	
+  		    {% endif %}
+
+	     	<form class="form-signin" method="post">
+		 		<h2 class="form-signin-heading">Iniciar sesión</h2>
+				{{ render_field(form.username, class="form-control", placeholder="Username") }}
+				<p class="help-block text-danger"></p>
+				{{ render_field(form.password, class="form-control", placeholder="Contraseña") }}
+				<input class="boton2" type="submit", value="Login">
+
+	      	</form> 
+	    </div>
+
+{% endblock %}
+
+
