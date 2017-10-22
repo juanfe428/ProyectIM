@@ -9,7 +9,7 @@ class CommentForm(Form):
     password =PasswordField('',[
         validators.DataRequired(),
 
-        validators.EqualTo('confirm', message='Las contraseñas deben coincidir')
+        validators.EqualTo('confirm', message='Las contrasenas deben coincidir')
     ])
     confirm=PasswordField('')
 

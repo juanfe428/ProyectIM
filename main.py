@@ -45,10 +45,10 @@ def login_page():
             if usuarios.index(usuario)==passwords.index(password):
                 return redirect(url_for('home'))
             else:
-                flash("usuario o contraseña incorrecta")
+                flash("usuario o contrasena incorrecta")
         else:
 
-            flash('Contraseña o usario incorrecto')
+            flash('Contrasena o usario incorrecto')
 
     return render_template("login.html",form=formulario,title=title)
 @app.route('/home',methods=['GET','POST'])
