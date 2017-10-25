@@ -9,9 +9,11 @@ import json
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+amigos=[]
 
 usuarios=[]
 passwords=[]
+usuariosconectados=[]
 
 #Carga los usaurios ya registrados de un archivo texto
 f=open("usuarios.txt","r")
@@ -84,9 +86,15 @@ def login_page():
     return render_template("login.html",form=formulario,title=title)
 @app.route('/home',methods=['GET','POST'])
 
+
 def home():
     pass
+    global usuarios 
     formulario = forms.LoginForm(request.form)
+    buscarusuario=formulario.username.data
+
+
+
     return render_template("home.html", form=formulario)
     
 if __name__ == '__main__':
