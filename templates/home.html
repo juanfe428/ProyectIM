@@ -32,13 +32,13 @@
 					<br>
 					<center>
 						<h6>Ingresa nombre de usuario</h6>
-					</center>
 						<br>
 						{{ render_field(form.username, class="form-control", placeholder="Username") }}
+					</center>
 						<br>
 					<center>
+						<input type="submit" class="boton4"  name="uno" value="Añadir">
 						
-						<input class="boton4" type="submit", value="Confirmar">
 					</center>
 						
 					</div>
@@ -49,11 +49,24 @@
 		</div>
 		<div class="ventana2">
 			<div class="form">
+
 				<div class="prueba">
 					<a href="javascript:close();" type="btn" aria-label="Close" class="close">&times;</a>
 					<p align="left">Contactos</p>
 					
-				</div>				
+				</div>
+				<center>
+
+					
+					{% for datos in amigos[contador]%}
+						<form method="post">
+			               	<div class="list">
+								<input type="submit"  name="chat" class="contacto" value={{datos}}>
+			                </div>
+							
+						</form>
+		            {% endfor %}
+				</center>			
 			</div>
 		</div>
 
@@ -70,19 +83,45 @@
 				<input type="submit" class="boton" onclick="location.href='javascript:openVentana();';" value="Añadir" />
 				
 			</header>
+			<br>
+			<center>
+				
+				<form method="post">
+					
+					{% for datos in amigos[contador]%}
+						<div class="list">
+							<button type="submit"  name="uno" class="contacto" value="{{datos}}">{{datos}}</button>
+				        </div>
+			    	{% endfor %}
+				
+				
+				</form>
+			</center>
+
+				
+
+
+
+
+
 		</div>
 
 
 		<div class="caja1">
 			<div class="cajatexto">
-				<center>
+				<form method="post">
 					
-					<input type="text" class="entrada" placeholder="Write somthing">
-				</center>
-				<input type="submit" class="boton5" value="Enviar" />
-				
+					<center>
+						
+						<input type="text" class="entrada" placeholder="Write something...">
+					</center>
+					<input type="submit" class="boton5" name="uno" value="Enviar" />
+					
+				</form>
+
 			</div> 
 		</div>
+
 
 	
 {% endblock %}

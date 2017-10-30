@@ -13,8 +13,17 @@
 	<title> {% block title %} {% endblock %} </title>
 </head>
 <body>
-	{% block body %}
-	{% endblock %}
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+	    <ul class="alert alert-warning">
+	    {% for message in messages %}
+	      <u>{{ message }}</u>
+
+	    {% endfor %}
+	    </ul>
+	  {% endif %}
+	{% endwith %}
+	{% block body %}{% endblock %}
 	
 </body>
 </html>

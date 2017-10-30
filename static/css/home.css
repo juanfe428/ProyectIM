@@ -81,13 +81,12 @@ margin:2px; padding:2px;
 }
 .list{
     height: 72px;
-    width:100%;
-    background-color:#E8E5E5;
+    width:90%;
+    background-color:white;
     position: relative;
-    margin-top:3px;
+    margin:3px;
     padding: 0;
     border: 1px;
-    display: none;
 
 }
 
@@ -102,6 +101,7 @@ margin:2px; padding:2px;
   border-right: 0;
   border-bottom: 0;
   position: relative;
+  margin: 2px
 
 }
 
@@ -165,7 +165,7 @@ margin:2px; padding:2px;
 .cajatexto{
     bottom: 0;
     width: 99.5%;
-    height: 7%;
+    height:40px;
     background-color: #eaebed;
     position: absolute;
     padding: 5px;
@@ -187,3 +187,15 @@ margin:2px; padding:2px;
         position: absolute;
         right: 0;
        }
+.contacto{
+    font-size:13px;
+    font-family:Segoe ,UI;
+    font-weight:bold;        
+    color:black;
+    background:#F1F1F1;
+    border:0px;
+    width:100%;
+    height:100%;
+    position: relative;
+
+}
