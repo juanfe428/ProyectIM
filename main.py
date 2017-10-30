@@ -18,7 +18,7 @@ app.config.update(
 usuarios=[]
 passwords=[]
 amigos=[[],[],[],[],[]]
-Mensajes=[[],[],[],[],[],[],[]  ]
+Mensajes=[["bien o que?"],[],[],[],[],[],[],[]  ]
 
 
 #Carga los usaurios ya registrados de un archivo texto
@@ -117,7 +117,7 @@ def login_page():
 
 def home():
     pass
-    global usuarios, amigos
+    global usuarios, amigos,Mensajes
     chatsactivos=[]
     i=0
 
@@ -156,17 +156,22 @@ def home():
             else:
                 pass
                 flash("El usuario ingresado es incorrecto")
-        print(session["chatactivo"])
+        #print()
+
         
-        if request.form["uno"]=="Enviar" : 
+        if request.form["uno"]=="Enviar" and amigos[session["username_id"]]!=[] and request.form["lol"]!="":
             print("hola")
+            msg=request.form["lol"]
+            who=session["chatactivo"]
+            i=usuarios.index(who)
+
+            Mensajes[i].append(msg)
 
         else:
             if request.form["uno"]!="Añadir":
                  print("usarioooo")
                  if request.form["uno"]!="Enviar":
                      session["chatactivo"]==request.form["uno"]
-                     print(request.form["uno"])
                      print(session["chatactivo"])
             else:
                 pass
@@ -174,7 +179,7 @@ def home():
 
         
 
-    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,chatsactivos=chatsactivos)
+    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries)
 @app.route('/home2',methods=['GET','POST'])
 
 

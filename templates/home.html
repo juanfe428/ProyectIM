@@ -108,12 +108,19 @@
 
 
 		<div class="caja1">
+			Usuario: {{ entries.datos1 }}
+            <ul>
+            {% for datos in entries.datos3 %}
+                <br>
+                <label>{{datos}}</label>
+            {% endfor %}
+            </ul>
 			<div class="cajatexto">
 				<form method="post">
 					
 					<center>
 						
-						<input type="text" class="entrada" placeholder="Write something...">
+						<input type="text" class="entrada" name="lol" placeholder="Write something...">
 					</center>
 					<input type="submit" class="boton5" name="uno" value="Enviar" />
 					
