@@ -142,21 +142,16 @@ def home():
 
                     
                 else:
-                    for datos in usuarios:
-                        if datos==buscarusuario:
-                            break
-                        i+=1
-                    print(i)
                     session["chatactivo"]=buscarusuario
                     print(amigos)
-                    amigos[i].append("hola")
-
+                    index1=usuarios.index(buscarusuario)
+                    amigos[index1].append(usuarios[session["username_id"]])
                     amigos[session["username_id"]].append(buscarusuario)
                     pass
             else:
                 pass
                 flash("El usuario ingresado es incorrecto")
-        #print()
+        
 
         
         if request.form["uno"]=="Enviar" and amigos[session["username_id"]]!=[] and request.form["lol"]!="":
