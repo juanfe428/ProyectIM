@@ -138,8 +138,8 @@ margin:2px; padding:2px;
 .caja1{
     background-color: white;
     width: 85% ;
-    height: 99%;
-    position: absolute;
+    height: 93.5%;
+    position: fixed;
     text-align: left;
     right: 0;
     overflow:auto;
@@ -163,17 +163,19 @@ margin:2px; padding:2px;
     width: 60%;
 }
 
-.cajatexto{
+.cajatexto {
     bottom: 0;
-    width: 99.5%;
-    height:40px;
+    width: 84.5%;
+    height: 6%;
     background-color: #eaebed;
     position: absolute;
-    padding: 5px;
+    padding: 2px;
     margin: 0;
     border: 0;
-
+    left: 15%;
+    right: 78%;
 }
+
 
 .boton5{
         font-size:13px;
@@ -184,7 +186,7 @@ margin:2px; padding:2px;
         background:#0090FF;
         border:0px;
         width:100px;
-        height:35px;
+        height:80%;
         position: absolute;
         right: 0;
        }
@@ -227,10 +229,11 @@ margin:2px; padding:2px;
     position: relative;
     border:0;
     left: 0;
-    float: left;
     margin-left: 5px;
     padding: 10px;
+    margin-bottom: 8px;
 
 
 
 }
+
