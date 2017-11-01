@@ -15,6 +15,7 @@ app.config.update(
     USERNAME="JUAN",
     PASSWORD="ADMIN"
 )
+
 usuarios=[]
 passwords=[]
 amigos=[[],[],[],[],[]]
@@ -156,20 +157,27 @@ def home():
         
         if request.form["uno"]=="Enviar" and amigos[session["username_id"]]!=[] and request.form["lol"]!="":
             print("hola")
+
             msg=request.form["lol"]
             who=session["chatactivo"]
+            print("a este se envio el mensaje"+str(who))
             i=usuarios.index(who)
 
             Mensajes[i].append(msg)
 
         else:
             if request.form["uno"]!="Añadir":
-                 print("usarioooo")
-                 if request.form["uno"]!="Enviar":
-                     session["chatactivo"]==request.form["uno"]
-                     print(session["chatactivo"])
+
+
+                print("-------------")
+                if request.form["uno"]!="Enviar" and amigos[session["username_id"]]!=[]:
+                    print("este es el chat activo"+str(request.form["uno"]))
+                    session["chatactivo"]=request.form["uno"]
+                    print("--------")
+                    print(session["chatactivo"])
             else:
                 pass
+
 
 
         

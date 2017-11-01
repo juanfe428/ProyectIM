@@ -108,13 +108,23 @@
 
 
 		<div class="caja1">
-			Usuario: {{ entries.datos1 }}
-            <ul>
+			<div class="info">
+				<label>{{ entries.datos1 }}</label>
+				
+			</div>
+			
+           
             {% for datos in entries.datos3 %}
-                <br>
-                <label>{{datos}}</label>
+            	<div class="chatcontainer">
+                	<label>{{datos}}</label>
+
+            		
+            	</div>
+            	<br>
+           		<br>
+            	<br>
+                
             {% endfor %}
-            </ul>
 			<div class="cajatexto">
 				<form method="post">
 					
