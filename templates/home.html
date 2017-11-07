@@ -109,20 +109,34 @@
 
 		<div class="caja1">
 			<div class="info">
-				<label>{{ entries.datos1 }}</label>
+				<label>{{ who }}</label>
 				
 			</div>
 			
            
-            {% for datos in entries.datos3 %}
+            {% for datos in Recibidos[contador]%}
             	<div class="chatcontainer">
                 	<label>{{datos}}</label>
+                	<label>{{hora}}</label>
 
             		
             	</div>
+            
 
                 
             {% endfor %}
+            {% for datos in Enviados[contador]%}
+            	<div class="chatcontainer2">
+                	<label>{{datos}}</label>
+                	<label>{{hora}}</label>
+
+            		
+            	</div>
+            
+
+                
+            {% endfor %}
+
 		</div>
 		<div class="cajatexto">
 			<form method="post">

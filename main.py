@@ -4,6 +4,10 @@ from flask import request,url_for,redirect
 from flask_wtf import CSRFProtect
 from flask import flash
 
+
+import datetime
+
+
 import forms
 import json
 
@@ -15,12 +19,14 @@ app.config.update(
     USERNAME="JUAN",
     PASSWORD="ADMIN"
 )
+now = datetime.datetime.now()
 
 usuarios=[]
 passwords=[]
 amigos=[[],[],[],[],[]]
-Mensajes=[["bien o que?"],[],[],[],[],[],[],[]  ]
-
+Recibidos=[[],[],[],[],[]]
+Enviados=[[],[],[],[]]
+who=None
 
 #Carga los usaurios ya registrados de un archivo texto
 f=open("usuarios.txt","r")
@@ -46,7 +52,7 @@ for palabrasos in texto:
 
 
 def index():
-    global usuarios,passwords
+    global usuarios,passwords,who
     formulario = forms.CommentForm(request.form)
     title = 'Tellme!'
     usuario=formulario.username.data
@@ -66,6 +72,7 @@ def index():
             f.write(str(password)+"-")
             f.close()
             i=0
+            
           
 
     return render_template('index.html', title=title, form=formulario)
@@ -76,6 +83,7 @@ def login_page():
 
     global usuarios,passwords
     print(usuarios)
+
     title = 'Tellme!'
     formulario = forms.LoginForm(request.form)
     usuario=formulario.username.data
@@ -101,6 +109,7 @@ def login_page():
                         session["username_id"]=i
                     i+=1
                     print(session)
+                session["username"]=usuario
 
 
                 return redirect(url_for('home'))
@@ -118,17 +127,25 @@ def login_page():
 
 def home():
     pass
-    global usuarios, amigos,Mensajes
-    chatsactivos=[]
+    global usuarios, amigos,Recibidos,Enviados,who
+
     i=0
+    print(Enviados)
+    if not Enviados[session["username_id"]]==[]:
+
+        Enviados[session["username_id"]].clear()
+    if not Recibidos[session["username_id"]]==[]:
+
+        Recibidos[session["username_id"]].clear()
 
 
-    entries = {'datos1': usuarios[session["username_id"]], 'datos2': session["username_id"], 'datos3': Mensajes[session["username_id"]]}
+    print(Enviados[session["username_id"]])
+
+
+    entries = {'datos1': usuarios[session["username_id"]], 'datos2': session["username_id"]}
     formulario = forms.Add(request.form)
     buscarusuario=formulario.username.data
     contador=session["username_id"]
-    print()
-
     if request.method=='POST':
 
 
@@ -145,9 +162,21 @@ def home():
                 else:
                     session["chatactivo"]=buscarusuario
                     print(amigos)
+                    who=session["chatactivo"]
                     index1=usuarios.index(buscarusuario)
                     amigos[index1].append(usuarios[session["username_id"]])
                     amigos[session["username_id"]].append(buscarusuario)
+                    #Recibidos.pop(session["username_id"])
+                    #Enviados.pop(session["username_id"])
+
+                    a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","w")
+                    b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","w")
+
+
+                    a.close()
+                    b.close()
+
+
                     pass
             else:
                 pass
@@ -155,34 +184,97 @@ def home():
         
 
         
-        if request.form["uno"]=="Enviar" and amigos[session["username_id"]]!=[] and request.form["lol"]!="":
-            print("hola")
+        if request.form["uno"]=="Enviar" and amigos[session["username_id"]]!=[] and request.form["lol"]!="" and session["chatactivo"]!=[]:
+
+
 
             msg=request.form["lol"]
             who=session["chatactivo"]
-            print("a este se envio el mensaje"+str(who))
-            i=usuarios.index(who)
 
-            Mensajes[i].append(msg)
+            a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
+            b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","a")            
+
+
+            #print("a este se envio el mensaje"+str(who))
+            #i=usuarios.index(who)
+            a.write("-"+str(msg)+"-")
+            #Mensaje recibido con indicador/
+            b.write("/"+str(msg)+"/")
+
+            a.close()
+            b.close()
+
 
         else:
             if request.form["uno"]!="Añadir":
 
 
-                print("-------------")
                 if request.form["uno"]!="Enviar" and amigos[session["username_id"]]!=[]:
+
                     print("este es el chat activo"+str(request.form["uno"]))
                     session["chatactivo"]=request.form["uno"]
-                    print("--------")
-                    print(session["chatactivo"])
-            else:
-                pass
+                    who=session["chatactivo"]
+                    if not Enviados[session["username_id"]]==[]:
+
+                        Enviados[session["username_id"]].clear()
+                    if not Recibidos[session["username_id"]]==[]:
+
+                        Recibidos[session["username_id"]].clear()
+                    
+
+
+
+        if amigos[session["username_id"]]!=[] and session["chatactivo"]!=[]:
+                        
+            a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt")
+
+            texto=a.readlines()
+
+            a.close()
+
+            
+
+
+            for palabras in texto:
+
+                palabras=palabras.split("/")
+                for mensajes in palabras:
+                    print(mensajes)
+                    if not "-" in mensajes:
+                        if mensajes!= "\n" and mensajes!=""  :
+                            MensajeR=mensajes
+
+                            Recibidos[session["username_id"]].append(MensajeR)
+            for palabras in texto:
+                palabras=palabras.split("-")
+                for mensajes1 in palabras:
+
+                    if "/" in mensajes1:
+                        pass
+                    else:
+
+                        if mensajes1!= "\n" and mensajes1!="":
+                            MensajeE=mensajes1
+
+                            Enviados[session["username_id"]].append(MensajeE)
+
+
+
+
+
+
+
+    
+        
+    
+
+
 
 
 
         
 
-    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries)
+    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Recibidos=Recibidos,Enviados=Enviados,who=who)
 @app.route('/home2',methods=['GET','POST'])
 
 
