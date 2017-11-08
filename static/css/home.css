@@ -142,7 +142,7 @@ margin:2px; padding:2px;
     position: fixed;
     text-align: left;
     right: 0;
-    overflow:auto;
+    overflow-y: scroll;
     border-top: 0;
     border-bottom: 0;
     border-right: 0;
@@ -228,6 +228,8 @@ margin:2px; padding:2px;
     margin-left: 5px;
     padding: 10px;
     margin-bottom: 8px;
+    overflow-wrap: break-word;
+    margin-right: inherit;
 
 
 
@@ -243,5 +245,7 @@ margin:2px; padding:2px;
     margin-left: 5px;
     padding: 10px;
     margin-bottom: 8px;
-    left: 59%;
+    left: 0%;
+    overflow-wrap: break-word;
+    margin-left: auto;  
 }

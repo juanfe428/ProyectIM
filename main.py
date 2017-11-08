@@ -4,7 +4,6 @@ from flask import request,url_for,redirect
 from flask_wtf import CSRFProtect
 from flask import flash
 
-
 import datetime
 
 
@@ -19,17 +18,55 @@ app.config.update(
     USERNAME="JUAN",
     PASSWORD="ADMIN"
 )
-now = datetime.datetime.now()
+
+
+
+
 
 usuarios=[]
 passwords=[]
-amigos=[[],[],[],[],[]]
-Recibidos=[[],[],[],[],[]]
-Enviados=[[],[],[],[]]
-who=None
+amigos=[]
+Recibidos=[]
+Enviados=[]
+who="Agrega un usuario para comenzar 😉"
+
+if Enviados==[]:
+    a=open("Archivos/len.txt","r")
+
+    texto=a.readlines()
+    for numero in texto:
+        i=int(numero)
+        print(i)
+    x=0
+    while x!=i:
+        amigos.append([])
+        Enviados.append([])
+        Recibidos.append([])
+        x+=1
+
+    a.close()
+
+
+    f=open("Archivos/amigos.txt","r")
+    texto=f.readlines()
+    f.close()
+    for palabras in texto:
+        palabras=palabras.split("/")
+        print(palabras)
+        for mas in palabras:
+            mover=len(mas)
+            if mas!="" and mas!="\n":
+                print(mas[mover-1])
+                index=int(mas[mover-1])
+                final=mas.split(mas[mover-1])
+                for yafinal in final:
+                    if yafinal!="":
+                        print(index)
+                        print(amigos)
+                        amigos[index].append(yafinal)
 
 #Carga los usaurios ya registrados de un archivo texto
-f=open("usuarios.txt","r")
+f=open("Archivos/usuarios.txt","r")
 texto=f.readlines()
 f.close()
 for palabrasos in texto:
@@ -39,7 +76,7 @@ for palabrasos in texto:
             usuarios.append(usuario)
 
 #carga las contraseñas de un archivo texto
-f=open("passwords.txt","r")
+f=open("Archivos/passwords.txt","r")
 texto=f.readlines()
 f.close()
 for palabrasos in texto:
@@ -47,12 +84,13 @@ for palabrasos in texto:
     for pswd in palabras:
         if pswd!= "":
             passwords.append(pswd)
+print(Enviados)
 
 @app.route('/register', methods=['GET','POST'])
 
 
 def index():
-    global usuarios,passwords,who
+    global usuarios,passwords,who,amigos,Recibidos,Enviados
     formulario = forms.CommentForm(request.form)
     title = 'Tellme!'
     usuario=formulario.username.data
@@ -64,14 +102,25 @@ def index():
         else:
             usuarios.append(usuario)
             passwords.append(password)
-            flash("Se ha registrado")
-            f=open("usuarios.txt","a")
+            f=open("Archivos/usuarios.txt","a")
             f.write(str(usuario)+"-")
             f.close()
-            f=open("passwords.txt","a")
+            f=open("Archivos/passwords.txt","a")
             f.write(str(password)+"-")
             f.close()
             i=0
+            amigos.append([])
+            Recibidos.append([])
+            Enviados.append([])
+            flash("Se ha registrado")
+            a=open("Archivos/len.txt","w")
+
+            a.write(str(len(amigos)))
+            a.close()
+
+
+            return redirect(url_for('login_page'))
+
             
           
 
@@ -128,6 +177,24 @@ def login_page():
 def home():
     pass
     global usuarios, amigos,Recibidos,Enviados,who
+    now = datetime.datetime.now()
+    hora=str(now.hour)+":"+str(now.minute)
+
+
+    a=open("Archivos/len.txt","r")
+
+    texto=a.readlines()
+    for numero in texto:
+        i=int(numero)
+        print(i)
+    x=0
+    while x!=i:
+        amigos.append([])
+        Enviados.append([])
+        Recibidos.append([])
+        pass
+        x+=1
+
 
     i=0
     print(Enviados)
@@ -148,7 +215,6 @@ def home():
     contador=session["username_id"]
     if request.method=='POST':
 
-
       
         if request.form["uno"]=="Añadir":
             pass            
@@ -168,6 +234,18 @@ def home():
                     amigos[session["username_id"]].append(buscarusuario)
                     #Recibidos.pop(session["username_id"])
                     #Enviados.pop(session["username_id"])
+                    f=open("Archivos/amigos.txt","a")
+
+                    f.write(str(buscarusuario)+str(session["username_id"])+"/")
+                    f.write(str(usuarios[session["username_id"]])+str(index1)+"/")
+
+
+                    f.close()
+
+
+
+
+
 
                     a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","w")
                     b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","w")
@@ -274,7 +352,7 @@ def home():
 
         
 
-    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Recibidos=Recibidos,Enviados=Enviados,who=who)
+    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Recibidos=Recibidos,Enviados=Enviados,who=who,hora=hora)
 @app.route('/home2',methods=['GET','POST'])
 
 
