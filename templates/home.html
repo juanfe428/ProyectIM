@@ -61,7 +61,11 @@
 					{% for datos in amigos[contador]%}
 						<form method="post">
 			               	<div class="list">
-								<input type="submit"  name="chat" class="contacto" value={{datos}}>
+								<div class="solucitudes">{{datos}}</div> 					
+								<input type="submit" class="Aceptar" name="uno" value="{{dato}}" />
+								<input type="submit" class="Rechazar" name="uno" value="Rechazar" />
+
+
 			                </div>
 							
 						</form>
@@ -117,8 +121,6 @@
             {% for datos in Recibidos[contador]%}
             	<div class="chatcontainer">
                 	<a>{{datos}}</a>
-                	<br>
-                	<a>{{hora}}</a>
 
             		
             	</div>
@@ -129,9 +131,7 @@
             {% for datos in Enviados[contador]%}
             	<div class="chatcontainer2">
                 	<a>{{datos}}</a>
-                	<br>
-                	<a>{{hora}}</a>
-
+                	
             		
             	</div>
             

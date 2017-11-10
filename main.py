@@ -28,6 +28,7 @@ passwords=[]
 amigos=[]
 Recibidos=[]
 Enviados=[]
+
 who="Agrega un usuario para comenzar 😉"
 
 if Enviados==[]:
@@ -52,7 +53,6 @@ if Enviados==[]:
     f.close()
     for palabras in texto:
         palabras=palabras.split("/")
-        print(palabras)
         for mas in palabras:
             mover=len(mas)
             if mas!="" and mas!="\n":
@@ -61,30 +61,28 @@ if Enviados==[]:
                 final=mas.split(mas[mover-1])
                 for yafinal in final:
                     if yafinal!="":
-                        print(index)
-                        print(amigos)
                         amigos[index].append(yafinal)
 
 #Carga los usaurios ya registrados de un archivo texto
-f=open("Archivos/usuarios.txt","r")
-texto=f.readlines()
-f.close()
-for palabrasos in texto:
-    palabras=palabrasos.split("-")
-    for usuario in palabras:
-        if usuario!= "":
-            usuarios.append(usuario)
+    f=open("Archivos/usuarios.txt","r")
+    texto=f.readlines()
+    f.close()
+    for palabrasos in texto:
+        palabras=palabrasos.split("-")
+        for usuario in palabras:
+            if usuario!= "":
+                usuarios.append(usuario)
 
 #carga las contraseñas de un archivo texto
-f=open("Archivos/passwords.txt","r")
-texto=f.readlines()
-f.close()
-for palabrasos in texto:
-    palabras=palabrasos.split("-")
-    for pswd in palabras:
-        if pswd!= "":
-            passwords.append(pswd)
-print(Enviados)
+    f=open("Archivos/passwords.txt","r")
+    texto=f.readlines()
+    f.close()
+    for palabrasos in texto:
+        palabras=palabrasos.split("-")
+        for pswd in palabras:
+            if pswd!= "":
+                passwords.append(pswd)
+    print(Enviados)
 
 @app.route('/register', methods=['GET','POST'])
 
@@ -181,22 +179,6 @@ def home():
     hora=str(now.hour)+":"+str(now.minute)
 
 
-    a=open("Archivos/len.txt","r")
-
-    texto=a.readlines()
-    for numero in texto:
-        i=int(numero)
-        print(i)
-    x=0
-    while x!=i:
-        amigos.append([])
-        Enviados.append([])
-        Recibidos.append([])
-        pass
-        x+=1
-
-
-    i=0
     print(Enviados)
     if not Enviados[session["username_id"]]==[]:
 
@@ -266,7 +248,7 @@ def home():
 
 
 
-            msg=request.form["lol"]
+            msg=request.form["lol"]+":"+str(hora)
             who=session["chatactivo"]
 
             a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
