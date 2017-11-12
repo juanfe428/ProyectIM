@@ -1,11 +1,10 @@
 from flask import Flask,session
 from flask import render_template
 from flask import request,url_for,redirect
-from flask_wtf import CSRFProtect
 from flask import flash
 
 import datetime
-
+import requests
 
 import forms
 import json
@@ -13,7 +12,7 @@ import json
 app = Flask(__name__)
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 app.config.update(
-    DEBUG=True,
+    DEBUG=False,
     SECRET_KEY='A0Zr98j/3yX R~XHH!jmN]LWX/,?RT',
     USERNAME="JUAN",
     PASSWORD="ADMIN"
@@ -57,13 +56,9 @@ if Enviados==[]:
         for mas in palabras:
             mover=len(mas)
             if mas!="" and mas!="\n":
-                print(mas)
                 index=int(mas[mover-1])
                 final=mas.split(mas[mover-1])
-                for yafinal in final:
-                    if yafinal!="":
-                        amigos[index].append(yafinal)
-                        print(yafinal)
+                amigos[index].append(mas[:-1])
 
 #Carga los usaurios ya registrados de un archivo texto
     f=open("Archivos/usuarios.txt","r")
@@ -131,9 +126,9 @@ def index():
 def login_page():
 
     global usuarios,passwords
-    print(amigos[session["username_id"]])
 
     title = 'Tellme!'
+
     formulario = forms.LoginForm(request.form)
     usuario=formulario.username.data
     password=formulario.password.data
@@ -241,8 +236,12 @@ def home():
                             if not session["username"] in Solicitudes[index1]:
 
                                 if not session["username"] in Solicitudes[index1]:
-                                    Solicitudes[index1].append(usuarios[session["username_id"]])
-                                    flash("se ha enviao solicitud a :"+str(buscarusuario))
+
+                                    if not buscarusuario in amigos[session["username_id"]]:
+                                        Solicitudes[index1].append(usuarios[session["username_id"]])
+                                        flash("se ha enviao solicitud a :"+str(buscarusuario))
+                                    else:
+                                        flash("El usuario ingresado ya es tu amigo")
                             else:
                                 flash("Ya se ha enviado solicitud")
 
@@ -255,10 +254,10 @@ def home():
 
                 
                 if request.form["uno"]=="Enviar" and amigos[session["username_id"]]!=[] and request.form["lol"]!="" and session["chatactivo"]!=[]:
+                    localizacion = requests.get('https://api.ipdata.co').json()
 
 
-
-                    msg=request.form["lol"]+":"+str(hora)
+                    msg=request.form["lol"]+"   "+"("+str(hora)+"|"+str(localizacion['city'])+")"
                     who=session["chatactivo"]
 
                     a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
@@ -350,4 +349,4 @@ def home2():
     return("hola")
 
 if __name__ == '__main__':
-    app.run(debug=True,port=8000)
+    app.run()
