@@ -58,13 +58,12 @@
 				<center>
 
 					
-					{% for datos in amigos[contador]%}
+					{% for datos in Solicitudes[contador]%}
 						<form method="post">
 			               	<div class="list">
 								<div class="solucitudes">{{datos}}</div> 					
-								<input type="submit" class="Aceptar" name="uno" value="{{dato}}" />
-								<input type="submit" class="Rechazar" name="uno" value="Rechazar" />
-
+								<button type="submit" class="Aceptar" name="dos" value="{{datos}}">Aceptar</button>
+								<button type="submit" class="Rechazar" name="tres" value="{{datos}}">Rechazar</button>
 
 			                </div>
 							

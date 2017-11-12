@@ -28,6 +28,7 @@ passwords=[]
 amigos=[]
 Recibidos=[]
 Enviados=[]
+Solicitudes=[]
 
 who="Agrega un usuario para comenzar 😉"
 
@@ -37,12 +38,12 @@ if Enviados==[]:
     texto=a.readlines()
     for numero in texto:
         i=int(numero)
-        print(i)
     x=0
     while x!=i:
         amigos.append([])
         Enviados.append([])
         Recibidos.append([])
+        Solicitudes.append([])
         x+=1
 
     a.close()
@@ -56,7 +57,6 @@ if Enviados==[]:
         for mas in palabras:
             mover=len(mas)
             if mas!="" and mas!="\n":
-                print(mas[mover-1])
                 index=int(mas[mover-1])
                 final=mas.split(mas[mover-1])
                 for yafinal in final:
@@ -82,13 +82,12 @@ if Enviados==[]:
         for pswd in palabras:
             if pswd!= "":
                 passwords.append(pswd)
-    print(Enviados)
 
 @app.route('/register', methods=['GET','POST'])
 
 
 def index():
-    global usuarios,passwords,who,amigos,Recibidos,Enviados
+    global usuarios,passwords,who,amigos,Recibidos,Enviados,Solicitudes
     formulario = forms.CommentForm(request.form)
     title = 'Tellme!'
     usuario=formulario.username.data
@@ -110,6 +109,7 @@ def index():
             amigos.append([])
             Recibidos.append([])
             Enviados.append([])
+            Solicitudes.append([])
             flash("Se ha registrado")
             a=open("Archivos/len.txt","w")
 
@@ -129,7 +129,6 @@ def index():
 def login_page():
 
     global usuarios,passwords
-    print(usuarios)
 
     title = 'Tellme!'
     formulario = forms.LoginForm(request.form)
@@ -140,9 +139,7 @@ def login_page():
         if usuario in usuarios and password in passwords:
 
             indice=usuarios.index(usuario)
-            print(indice)
 
-            print(passwords[indice])
 
             if passwords[indice]==password:
             #if usuarios.index(usuario)==passwords.index(password)  :
@@ -151,11 +148,9 @@ def login_page():
 
 
                     if user==usuario:
-                        print(i)
                         session["Logged"]=True
                         session["username_id"]=i
                     i+=1
-                    print(session)
                 session["username"]=usuario
 
 
@@ -174,12 +169,11 @@ def login_page():
 
 def home():
     pass
-    global usuarios, amigos,Recibidos,Enviados,who
+    global usuarios, amigos,Recibidos,Enviados,who,Solicitudes
     now = datetime.datetime.now()
     hora=str(now.hour)+":"+str(now.minute)
 
 
-    print(Enviados)
     if not Enviados[session["username_id"]]==[]:
 
         Enviados[session["username_id"]].clear()
@@ -188,7 +182,6 @@ def home():
         Recibidos[session["username_id"]].clear()
 
 
-    print(Enviados[session["username_id"]])
 
 
     entries = {'datos1': usuarios[session["username_id"]], 'datos2': session["username_id"]}
@@ -196,127 +189,149 @@ def home():
     buscarusuario=formulario.username.data
     contador=session["username_id"]
     if request.method=='POST':
+        if request.form.getlist("tres")!=[]:
+            ola=request.form.getlist("tres")
+            for el in ola:
+                usuarioE=el
 
-      
-        if request.form["uno"]=="Añadir":
-            pass            
-            if buscarusuario in usuarios and buscarusuario!=usuarios[session["username_id"]]:
-                pass
+            Solicitudes[session["username_id"]].remove(usuarioE)
+        else:
 
-                if buscarusuario in amigos[session["username_id"]]:
-                    pass
 
-                    
-                else:
-                    session["chatactivo"]=buscarusuario
-                    print(amigos)
+            if request.form.getlist("dos")!=[]:
+
+                ola=request.form.getlist("dos")
+                for el in ola:
+                    usuarioA=el
+                Solicitudes[session["username_id"]].remove(usuarioA)
+
+                session["chatactivo"]=usuarioA
+                who=session["chatactivo"]
+                index1=usuarios.index(usuarioA)
+                amigos[index1].append(usuarios[session["username_id"]])
+                amigos[session["username_id"]].append(usuarioA)
+                            #Recibidos.pop(session["username_id"])
+                            #Enviados.pop(session["username_id"])
+                a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","w")
+                b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","w")
+                f=open("Archivos/amigos.txt","a")
+
+                f.write(str(usuarioA)+str(session["username_id"])+"/")
+                f.write(str(usuarios[session["username_id"]])+str(index1)+"/")
+
+
+                f.close()
+
+
+
+
+
+                a.close()
+                b.close()
+            else:
+                
+
+          
+                if request.form["uno"]=="Añadir":
+                    pass            
+                    if buscarusuario in usuarios and buscarusuario!=usuarios[session["username_id"]]:
+                        pass
+
+                        if buscarusuario in amigos[session["username_id"]]:
+                            pass
+
+                            
+                        else:
+
+                            index1=usuarios.index(buscarusuario)
+
+                            if not session["username"] in Solicitudes[index1]:
+
+                                if not session["username"] in Solicitudes[index1]:
+                                    Solicitudes[index1].append(usuarios[session["username_id"]])
+                                    flash("se ha enviao solicitud a :"+str(buscarusuario))
+                            else:
+                                flash("Ya se ha enviado solicitud")
+
+
+                            pass
+                    else:
+                        pass
+                        flash("El usuario ingresado es incorrecto")
+                
+
+                
+                if request.form["uno"]=="Enviar" and amigos[session["username_id"]]!=[] and request.form["lol"]!="" and session["chatactivo"]!=[]:
+
+
+
+                    msg=request.form["lol"]+":"+str(hora)
                     who=session["chatactivo"]
-                    index1=usuarios.index(buscarusuario)
-                    amigos[index1].append(usuarios[session["username_id"]])
-                    amigos[session["username_id"]].append(buscarusuario)
-                    #Recibidos.pop(session["username_id"])
-                    #Enviados.pop(session["username_id"])
-                    f=open("Archivos/amigos.txt","a")
 
-                    f.write(str(buscarusuario)+str(session["username_id"])+"/")
-                    f.write(str(usuarios[session["username_id"]])+str(index1)+"/")
+                    a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
+                    b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","a")            
 
 
-                    f.close()
-
-
-
-
-
-
-                    a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","w")
-                    b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","w")
-
+                    a.write("-"+str(msg)+"-")
+                    b.write("/"+str(msg)+"/")
 
                     a.close()
                     b.close()
 
 
-                    pass
-            else:
-                pass
-                flash("El usuario ingresado es incorrecto")
-        
-
-        
-        if request.form["uno"]=="Enviar" and amigos[session["username_id"]]!=[] and request.form["lol"]!="" and session["chatactivo"]!=[]:
+                else:
+                    if request.form["uno"]!="Añadir":
 
 
 
-            msg=request.form["lol"]+":"+str(hora)
-            who=session["chatactivo"]
+                        if request.form["uno"]!="Enviar" and amigos[session["username_id"]]!=[]:
 
-            a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
-            b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","a")            
+                            session["chatactivo"]=request.form["uno"]
+                            who=session["chatactivo"]
+                            if not Enviados[session["username_id"]]==[]:
 
+                                Enviados[session["username_id"]].clear()
+                            if not Recibidos[session["username_id"]]==[]:
 
-            #print("a este se envio el mensaje"+str(who))
-            #i=usuarios.index(who)
-            a.write("-"+str(msg)+"-")
-            #Mensaje recibido con indicador/
-            b.write("/"+str(msg)+"/")
-
-            a.close()
-            b.close()
+                                Recibidos[session["username_id"]].clear()
 
 
-        else:
-            if request.form["uno"]!="Añadir":
+                            
 
 
-                if request.form["uno"]!="Enviar" and amigos[session["username_id"]]!=[]:
 
-                    print("este es el chat activo"+str(request.form["uno"]))
-                    session["chatactivo"]=request.form["uno"]
-                    who=session["chatactivo"]
-                    if not Enviados[session["username_id"]]==[]:
+                if amigos[session["username_id"]]!=[] and session["chatactivo"]!=[] and who in amigos[session["username_id"]]:
+                                
+                    a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt")
 
-                        Enviados[session["username_id"]].clear()
-                    if not Recibidos[session["username_id"]]==[]:
+                    texto=a.readlines()
 
-                        Recibidos[session["username_id"]].clear()
+                    a.close()
+
                     
 
 
+                    for palabras in texto:
 
-        if amigos[session["username_id"]]!=[] and session["chatactivo"]!=[]:
-                        
-            a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt")
+                        palabras=palabras.split("/")
+                        for mensajes in palabras:
+                            if not "-" in mensajes:
+                                if mensajes!= "\n" and mensajes!=""  :
+                                    MensajeR=mensajes
 
-            texto=a.readlines()
+                                    Recibidos[session["username_id"]].append(MensajeR)
+                    for palabras in texto:
+                        palabras=palabras.split("-")
+                        for mensajes1 in palabras:
 
-            a.close()
+                            if "/" in mensajes1:
+                                pass
+                            else:
 
-            
+                                if mensajes1!= "\n" and mensajes1!="":
+                                    MensajeE=mensajes1
 
-
-            for palabras in texto:
-
-                palabras=palabras.split("/")
-                for mensajes in palabras:
-                    print(mensajes)
-                    if not "-" in mensajes:
-                        if mensajes!= "\n" and mensajes!=""  :
-                            MensajeR=mensajes
-
-                            Recibidos[session["username_id"]].append(MensajeR)
-            for palabras in texto:
-                palabras=palabras.split("-")
-                for mensajes1 in palabras:
-
-                    if "/" in mensajes1:
-                        pass
-                    else:
-
-                        if mensajes1!= "\n" and mensajes1!="":
-                            MensajeE=mensajes1
-
-                            Enviados[session["username_id"]].append(MensajeE)
+                                    Enviados[session["username_id"]].append(MensajeE)
 
 
 
@@ -334,7 +349,7 @@ def home():
 
         
 
-    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Recibidos=Recibidos,Enviados=Enviados,who=who,hora=hora)
+    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Recibidos=Recibidos,Enviados=Enviados,who=who,hora=hora,Solicitudes=Solicitudes)
 @app.route('/home2',methods=['GET','POST'])
 
 
