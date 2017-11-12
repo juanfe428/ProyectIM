@@ -57,11 +57,13 @@ if Enviados==[]:
         for mas in palabras:
             mover=len(mas)
             if mas!="" and mas!="\n":
+                print(mas)
                 index=int(mas[mover-1])
                 final=mas.split(mas[mover-1])
                 for yafinal in final:
                     if yafinal!="":
                         amigos[index].append(yafinal)
+                        print(yafinal)
 
 #Carga los usaurios ya registrados de un archivo texto
     f=open("Archivos/usuarios.txt","r")
@@ -129,6 +131,7 @@ def index():
 def login_page():
 
     global usuarios,passwords
+    print(amigos[session["username_id"]])
 
     title = 'Tellme!'
     formulario = forms.LoginForm(request.form)
@@ -210,24 +213,14 @@ def home():
                 index1=usuarios.index(usuarioA)
                 amigos[index1].append(usuarios[session["username_id"]])
                 amigos[session["username_id"]].append(usuarioA)
-                            #Recibidos.pop(session["username_id"])
-                            #Enviados.pop(session["username_id"])
                 a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","w")
                 b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","w")
-                f=open("Archivos/amigos.txt","a")
-
-                f.write(str(usuarioA)+str(session["username_id"])+"/")
+                f=open("Archivos/Solicitudes.txt","a")
                 f.write(str(usuarios[session["username_id"]])+str(index1)+"/")
-
-
                 f.close()
-
-
-
-
-
                 a.close()
                 b.close()
+
             else:
                 
 
@@ -300,7 +293,7 @@ def home():
 
 
 
-                if amigos[session["username_id"]]!=[] and session["chatactivo"]!=[] and who in amigos[session["username_id"]]:
+                if amigos[session["username_id"]]!=[] and who in amigos[session["username_id"]]:
                                 
                     a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt")
 
