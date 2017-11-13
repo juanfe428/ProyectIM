@@ -60,6 +60,19 @@ if Enviados==[]:
                 final=mas.split(mas[mover-1])
                 amigos[index].append(mas[:-1])
 
+    #Carga de un archivo las solicitudes que tenga cada usuario
+    f=open("Archivos/Solicitudes.txt","r")
+    texto=f.readlines()
+    f.close()
+    for palabras in texto:
+        palabras=palabras.split("/")
+        for mas in palabras:
+            mover=len(mas)
+            if mas!="" and mas!="\n":
+                index=int(mas[mover-1])
+                final=mas.split(mas[mover-1])
+                Solicitudes[index].append(mas[:-1])
+
 #Carga los usaurios ya registrados de un archivo texto
     f=open("Archivos/usuarios.txt","r")
     texto=f.readlines()
@@ -122,7 +135,7 @@ def index():
     return render_template('index.html', title=title, form=formulario)
     
 
-@app.route('/login',methods=['GET','POST'])
+@app.route('/',methods=['GET','POST'])
 def login_page():
 
     global usuarios,passwords
@@ -184,13 +197,25 @@ def home():
 
     entries = {'datos1': usuarios[session["username_id"]], 'datos2': session["username_id"]}
     formulario = forms.Add(request.form)
-    buscarusuario=formulario.username.data
     contador=session["username_id"]
     if request.method=='POST':
         if request.form.getlist("tres")!=[]:
             ola=request.form.getlist("tres")
             for el in ola:
                 usuarioE=el
+
+            index=session["username_id"]
+
+            f=open("Archivos/Solicitudes.txt","r")
+
+            text=f.read()
+            f.close()
+
+            f=open("Archivos/Solicitudes.txt","w")
+            borrar=text.replace(str(usuarioE)+str(index)+"/","")
+            print(text)
+            f.write(borrar)
+            f.close()
 
             Solicitudes[session["username_id"]].remove(usuarioE)
         else:
@@ -203,6 +228,23 @@ def home():
                     usuarioA=el
                 Solicitudes[session["username_id"]].remove(usuarioA)
 
+                index=session["username_id"]
+
+                f=open("Archivos/Solicitudes.txt","r")
+
+                text=f.read()
+                f.close()
+
+                f=open("Archivos/Solicitudes.txt","w")
+                borrar=text.replace(str(usuarioA)+str(index)+"/","")
+                print(text)
+                f.write(borrar)
+                f.close()
+
+
+
+
+
                 session["chatactivo"]=usuarioA
                 who=session["chatactivo"]
                 index1=usuarios.index(usuarioA)
@@ -210,8 +252,11 @@ def home():
                 amigos[session["username_id"]].append(usuarioA)
                 a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","w")
                 b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","w")
-                f=open("Archivos/Solicitudes.txt","a")
+                f=open("Archivos/Amigos.txt","a")
+                f.write(str(usuarioA)+str(session["username_id"])+"/")
                 f.write(str(usuarios[session["username_id"]])+str(index1)+"/")
+
+
                 f.close()
                 a.close()
                 b.close()
@@ -220,15 +265,16 @@ def home():
                 
 
           
-                if request.form["uno"]=="Añadir":
+                if request.form["uno"]=="Añadir" and request.form["buscarusuario"]!="":
+                    buscarusuario= request.form["buscarusuario"]
                     pass            
                     if buscarusuario in usuarios and buscarusuario!=usuarios[session["username_id"]]:
                         pass
 
                         if buscarusuario in amigos[session["username_id"]]:
                             pass
+                            flash("El usuario ingresado ya es tu amigo")
 
-                            
                         else:
 
                             index1=usuarios.index(buscarusuario)
@@ -237,11 +283,13 @@ def home():
 
                                 if not session["username"] in Solicitudes[index1]:
 
-                                    if not buscarusuario in amigos[session["username_id"]]:
-                                        Solicitudes[index1].append(usuarios[session["username_id"]])
-                                        flash("se ha enviao solicitud a :"+str(buscarusuario))
-                                    else:
-                                        flash("El usuario ingresado ya es tu amigo")
+                                    Solicitudes[index1].append(usuarios[session["username_id"]])
+                                    flash("se ha enviao solicitud a :"+str(buscarusuario))
+                                    f=open("Archivos/Solicitudes.txt","a")
+
+                                    f.write(str(usuarios[session["username_id"]])+str(index1)+"/")
+                                    f.close()
+
                             else:
                                 flash("Ya se ha enviado solicitud")
 
@@ -254,7 +302,8 @@ def home():
 
                 
                 if request.form["uno"]=="Enviar" and amigos[session["username_id"]]!=[] and request.form["lol"]!="" and session["chatactivo"]!=[]:
-                    localizacion = requests.get('https://api.ipdata.co').json()
+                    localizacion = requests.get('http://ip-api.com/json/').json()
+                    print(localizacion)
 
 
                     msg=request.form["lol"]+"   "+"("+str(hora)+"|"+str(localizacion['city'])+")"
@@ -349,4 +398,4 @@ def home2():
     return("hola")
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

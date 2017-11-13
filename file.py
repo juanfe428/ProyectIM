@@ -3,7 +3,6 @@
 from flask import Flask,session
 from flask import render_template
 from flask import request,url_for,redirect
-from flask_wtf import CSRFProtect
 from flask import flash
 
 

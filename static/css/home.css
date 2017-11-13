@@ -10,7 +10,7 @@ margin:2px; padding:2px;
         font-family: Segoe ,UI;
         font-weight: bold;
         color: black;
-        background: #FFF;
+        background: #c2ffd0;
         margin: 0;
         width: 61px;
         height: 35px;
@@ -21,7 +21,7 @@ margin:2px; padding:2px;
         font-family: Segoe ,UI;
         font-weight: bold;
         color: black;
-        background: #FFF;
+        background: #c2ffd0;
         margin: 5px;
         border-bottom-left-radius: 20px;
         height: 35px;
@@ -199,18 +199,19 @@ margin:2px; padding:2px;
 }
 
 .info{
-    width: 99.5%;
-    height:60px;
+    width: 100.9%;
+    height: 60px;
     position: relative;
-    background-color: #EBEEF0;
-    border:0;
-    top: 0;
+    background-color: #a3fff1;
+    border: 0;
     padding: 10px;
     text-align: left;
     font-family: sans-serif;
     font-weight: bold;
     font-size: 22px;
-    margin-bottom: 7px; 
+    right: 1%;
+    top: -1%;
+    margin-bottom: 7px;
 
 
 
@@ -238,7 +239,7 @@ margin:2px; padding:2px;
     width: 40%;
     height: auto;
     border-radius: 20px;
-    background-color: #2DA5FF;
+    background-color: #95d2ff;
     position: relative;
     border: 0;
     margin-left: 5px;
