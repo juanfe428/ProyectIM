@@ -117,36 +117,37 @@
 			</div>
 			
            
-            {% for datos in Recibidos[contador]%}
-            	<div class="chatcontainer">
-                	<a>{{datos}}</a>
+            {% for datos in Recibidos[contador] %}
+                <label class="chatcontainer">{{datos}}</label>
 
-            		
-            	</div>
+
+	        {% endfor %}
+		    {% for datos2 in Enviados[contador]%}
+		            		
+		        <label class="chatcontainer2">{{datos2}}</label>
+		                	
+                       
             
 
+          
                 
             {% endfor %}
-            {% for datos in Enviados[contador]%}
-            	<div class="chatcontainer2">
-            		
-                	<a>{{datos}}</a>
-                	
-            		
-            	</div>
-            
+            <div class="chatcontainer2">
+            	
+            	<img src="http://localhost:5000/templates/codww2.jpg"  style="width:128px;height:128px;">
+            </div>
 
-                
-            {% endfor %}
 
 		</div>
 		<div class="cajatexto">
-			<form method="post">
-					
-			
+			<form method="post" enctype=multipart/form-data >
 						
 				<input type="text" class="entrada" name="lol" placeholder="Write something...">
 				<input type="submit" class="boton5" name="uno" value="Enviar" />
+				<input type=file class="archivos" name="file" id="file">
+				<label for="file"></label>
+				<button type="submit" class="boton6" name="cuatro" value="Enviar2">Enviar imagen</button>
+
 					
 			</form>
 		</div> 

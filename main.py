@@ -191,13 +191,14 @@ def home():
     if not Recibidos[session["username_id"]]==[]:
 
         Recibidos[session["username_id"]].clear()
-
-
+    
 
 
     entries = {'datos1': usuarios[session["username_id"]], 'datos2': session["username_id"]}
     formulario = forms.Add(request.form)
     contador=session["username_id"]
+    n=len(Enviados[contador])
+    z=len(Recibidos[contador])
     if request.method=='POST':
         if request.form.getlist("tres")!=[]:
             ola=request.form.getlist("tres")
@@ -213,7 +214,6 @@ def home():
 
             f=open("Archivos/Solicitudes.txt","w")
             borrar=text.replace(str(usuarioE)+str(index)+"/","")
-            print(text)
             f.write(borrar)
             f.close()
 
@@ -237,10 +237,8 @@ def home():
 
                 f=open("Archivos/Solicitudes.txt","w")
                 borrar=text.replace(str(usuarioA)+str(index)+"/","")
-                print(text)
                 f.write(borrar)
                 f.close()
-
 
 
 
@@ -302,8 +300,14 @@ def home():
 
                 
                 if request.form["uno"]=="Enviar" and amigos[session["username_id"]]!=[] and request.form["lol"]!="" and session["chatactivo"]!=[]:
+
+
+                    #Prueba:
+
+                    
                     localizacion = requests.get('http://ip-api.com/json/').json()
-                    print(localizacion)
+
+
 
 
                     msg=request.form["lol"]+"   "+"("+str(hora)+"|"+str(localizacion['city'])+")"
@@ -361,6 +365,7 @@ def home():
                                     MensajeR=mensajes
 
                                     Recibidos[session["username_id"]].append(MensajeR)
+                                    z=len(Recibidos[contador])
                     for palabras in texto:
                         palabras=palabras.split("-")
                         for mensajes1 in palabras:
@@ -373,6 +378,8 @@ def home():
                                     MensajeE=mensajes1
 
                                     Enviados[session["username_id"]].append(MensajeE)
+                                    n=len(Enviados[contador])
+    
 
 
 
@@ -390,7 +397,7 @@ def home():
 
         
 
-    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Recibidos=Recibidos,Enviados=Enviados,who=who,hora=hora,Solicitudes=Solicitudes)
+    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Recibidos=Recibidos,Enviados=Enviados,who=who,hora=hora,Solicitudes=Solicitudes,n=n,z=z)
 @app.route('/home2',methods=['GET','POST'])
 
 
