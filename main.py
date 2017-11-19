@@ -2,12 +2,14 @@ from flask import Flask,session
 from flask import render_template
 from flask import request,url_for,redirect
 from flask import flash
-
+from werkzeug.utils import secure_filename
 import datetime
 import requests
-
+import os
 import forms
 import json
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+ALLOWED_EXTENSIONS = set([ 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
@@ -17,7 +19,9 @@ app.config.update(
     USERNAME="JUAN",
     PASSWORD="ADMIN"
 )
-
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 
@@ -25,13 +29,12 @@ app.config.update(
 usuarios=[]
 passwords=[]
 amigos=[]
-Recibidos=[]
-Enviados=[]
+Mensajes=[]
 Solicitudes=[]
 
 who="Agrega un usuario para comenzar 😉"
 
-if Enviados==[]:
+if Mensajes==[]:
     a=open("Archivos/len.txt","r")
 
     texto=a.readlines()
@@ -40,9 +43,8 @@ if Enviados==[]:
     x=0
     while x!=i:
         amigos.append([])
-        Enviados.append([])
-        Recibidos.append([])
         Solicitudes.append([])
+        Mensajes.append([])
         x+=1
 
     a.close()
@@ -97,7 +99,7 @@ if Enviados==[]:
 
 
 def index():
-    global usuarios,passwords,who,amigos,Recibidos,Enviados,Solicitudes
+    global usuarios,passwords,who,amigos,Mensajes,Solicitudes
     formulario = forms.CommentForm(request.form)
     title = 'Tellme!'
     usuario=formulario.username.data
@@ -117,8 +119,8 @@ def index():
             f.close()
             i=0
             amigos.append([])
-            Recibidos.append([])
-            Enviados.append([])
+
+
             Solicitudes.append([])
             flash("Se ha registrado")
             a=open("Archivos/len.txt","w")
@@ -180,26 +182,25 @@ def login_page():
 
 def home():
     pass
-    global usuarios, amigos,Recibidos,Enviados,who,Solicitudes
+    global usuarios, amigos,Mensajes,who,Solicitudes
+    n=len(Mensajes[session["username_id"]])
     now = datetime.datetime.now()
     hora=str(now.hour)+":"+str(now.minute)
+    target1 = os.path.join(APP_ROOT, "static/img/")
 
+    if not Mensajes[session["username_id"]]==[]:
 
-    if not Enviados[session["username_id"]]==[]:
-
-        Enviados[session["username_id"]].clear()
-    if not Recibidos[session["username_id"]]==[]:
-
-        Recibidos[session["username_id"]].clear()
+        Mensajes[session["username_id"]].clear()
     
 
 
     entries = {'datos1': usuarios[session["username_id"]], 'datos2': session["username_id"]}
     formulario = forms.Add(request.form)
     contador=session["username_id"]
-    n=len(Enviados[contador])
-    z=len(Recibidos[contador])
+
     if request.method=='POST':
+    
+
         if request.form.getlist("tres")!=[]:
             ola=request.form.getlist("tres")
             for el in ola:
@@ -310,7 +311,7 @@ def home():
 
 
 
-                    msg=request.form["lol"]+"   "+"("+str(hora)+"|"+str(localizacion['city'])+")"
+                    msg=request.form["lol"]+"   "+"("+str(hora)+"|"+str(localizacion['city'])+")"+"|N|"
                     who=session["chatactivo"]
 
                     a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
@@ -325,20 +326,55 @@ def home():
 
 
                 else:
-                    if request.form["uno"]!="Añadir":
+
+                    if request.form["uno"]=="Enviar2":
+                        flash("jasa")
+                        if 'file' not in request.files:
+                            flash('No file part')
+                            return redirect(request.url)
+                        file = request.files['file']
 
 
+                            # if user does not select file, browser also
+                            # submit a empty part without filename
+                        if file.filename == '':
+                            flash('No selected file')
+                            return redirect(request.url)
+                        if file and allowed_file(file.filename):
+                            filename = secure_filename(file.filename)
+                                
+                            destination = "/".join([target1, filename])
+                            file.save(destination)
+                            print(filename)
+                            localizacion = requests.get('http://ip-api.com/json/').json()
 
-                        if request.form["uno"]!="Enviar" and amigos[session["username_id"]]!=[]:
 
-                            session["chatactivo"]=request.form["uno"]
+                            msg=filename+"|M|"
                             who=session["chatactivo"]
-                            if not Enviados[session["username_id"]]==[]:
 
-                                Enviados[session["username_id"]].clear()
-                            if not Recibidos[session["username_id"]]==[]:
+                            a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
+                            b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","a")            
+                            a.write("-"+str(msg)+"-")
+                            b.write("/"+str(msg)+"/")
 
-                                Recibidos[session["username_id"]].clear()
+                            a.close()
+                            b.close()
+                    else:
+
+                        if request.form["uno"]!="Añadir":
+
+
+
+                            if request.form["uno"]!="Enviar" and amigos[session["username_id"]]!=[]:
+
+                                session["chatactivo"]=request.form["uno"]
+                                who=session["chatactivo"]
+
+                                if not Mensajes[session["username_id"]]==[]:
+
+                                    Mensajes[session["username_id"]].clear()
+
+                   
 
 
                             
@@ -352,34 +388,60 @@ def home():
                     texto=a.readlines()
 
                     a.close()
-
-                    
-
-
-                    for palabras in texto:
-
-                        palabras=palabras.split("/")
-                        for mensajes in palabras:
-                            if not "-" in mensajes:
-                                if mensajes!= "\n" and mensajes!=""  :
-                                    MensajeR=mensajes
-
-                                    Recibidos[session["username_id"]].append(MensajeR)
-                                    z=len(Recibidos[contador])
                     for palabras in texto:
                         palabras=palabras.split("-")
                         for mensajes1 in palabras:
 
-                            if "/" in mensajes1:
-                                pass
+                                                                
+                            if "/" in mensajes1 :
+                                mensajes1=mensajes1.split("/")
+                                for mensajes1 in mensajes1:
+                                    if "|M|" in mensajes1:
+
+                                        if mensajes1!= "\n" and mensajes1!=""  :
+                                            MensajeR=mensajes1
+                                            x=len(MensajeR)-3
+                                            Mensajes[session["username_id"]].append(["R",MensajeR[:x],"M"])
+
+                                            pass
+                                    else:
+                                        if mensajes1!= "\n" and mensajes1!="" :
+
+                                
+
+                                            MensajeR=mensajes1
+                                            x=len(MensajeR)-3
+                                                                                
+                                            Mensajes[session["username_id"]].append(["R",MensajeR[:x],"N"])
+                                            pass
                             else:
+                                if "|M|" in mensajes1:
+                                    if mensajes1!= "\n" and mensajes1!="":
+                                        MensajeE=mensajes1
+                                        x=len(MensajeE)-3
+                                        
 
-                                if mensajes1!= "\n" and mensajes1!="":
-                                    MensajeE=mensajes1
+                                        Mensajes[session["username_id"]].append(["E",MensajeE[:x],"M"])
+                                        pass
+                                else:
 
-                                    Enviados[session["username_id"]].append(MensajeE)
-                                    n=len(Enviados[contador])
-    
+                                                                    
+                                                                    
+                                    if mensajes1!= "\n" and mensajes1!="":
+
+                                        MensajeE=mensajes1
+                                        x=len(MensajeE)-3
+                                                                        
+                                        Mensajes[session["username_id"]].append(["E",MensajeE[:x],"N"])
+
+
+                    
+
+
+
+                    
+
+
 
 
 
@@ -397,7 +459,7 @@ def home():
 
         
 
-    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Recibidos=Recibidos,Enviados=Enviados,who=who,hora=hora,Solicitudes=Solicitudes,n=n,z=z)
+    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Mensajes=Mensajes,who=who,hora=hora,Solicitudes=Solicitudes,n=n)
 @app.route('/home2',methods=['GET','POST'])
 
 

@@ -116,26 +116,37 @@
 				
 			</div>
 			
-           
-            {% for datos in Recibidos[contador] %}
-                <label class="chatcontainer">{{datos}}</label>
+           {% for datos in range(n) %}
+           	{%if Mensajes[contador][datos][2]=="N"%}
+           		{%if Mensajes[contador][datos][0]== "E"%}
+            		<label class="chatcontainer2">{{Mensajes[contador][datos][1]}}</label>
+           		{%endif%}
+           		{%if Mensajes[contador][datos][0]== "R"%}
+           			<label class="chatcontainer">{{Mensajes[contador][datos][1]}}</label>
+           		{%endif%}
+           	{%endif%}
+           	{%if Mensajes[contador][datos][2]=="M"%}
+           		{%if Mensajes[contador][datos][0]== "E"%}
+           			<div class="chatcontainer2">
+           				<img src = "{{url_for('static', filename ='img/'+ Mensajes[contador][datos][1] )}}" width = "120" height= "130">
+           				
+           			</div>
+           		{%endif%}
+           		{%if Mensajes[contador][datos][0]== "R"%}
+           			<div class="chatcontainer">
+           				<img src = "{{url_for('static', filename ='img/'+ Mensajes[contador][datos][1] )}}" width = "120" height= "130">
+           				
+           			</div>
+           		{%endif%}
+           	{%endif%}
 
-
-	        {% endfor %}
-		    {% for datos2 in Enviados[contador]%}
+           {%endfor%}
+            			
+            		
 		            		
-		        <label class="chatcontainer2">{{datos2}}</label>
 		                	
-                       
-            
 
-          
-                
-            {% endfor %}
-            <div class="chatcontainer2">
-            	
-            	<img src="http://localhost:5000/templates/codww2.jpg"  style="width:128px;height:128px;">
-            </div>
+
 
 
 		</div>
@@ -146,7 +157,7 @@
 				<input type="submit" class="boton5" name="uno" value="Enviar" />
 				<input type=file class="archivos" name="file" id="file">
 				<label for="file"></label>
-				<button type="submit" class="boton6" name="cuatro" value="Enviar2">Enviar imagen</button>
+				<button type="submit" class="boton6" name="uno" value="Enviar2">Enviar imagen</button>
 
 					
 			</form>
