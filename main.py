@@ -183,10 +183,10 @@ def login_page():
 def home():
     pass
     global usuarios, amigos,Mensajes,who,Solicitudes
-    n=len(Mensajes[session["username_id"]])
     now = datetime.datetime.now()
     hora=str(now.hour)+":"+str(now.minute)
     target1 = os.path.join(APP_ROOT, "static/img/")
+    n=len(Mensajes[session["username_id"]])
 
     if not Mensajes[session["username_id"]]==[]:
 
@@ -328,7 +328,7 @@ def home():
                 else:
 
                     if request.form["uno"]=="Enviar2":
-                        flash("jasa")
+                        
                         if 'file' not in request.files:
                             flash('No file part')
                             return redirect(request.url)
@@ -338,7 +338,7 @@ def home():
                             # if user does not select file, browser also
                             # submit a empty part without filename
                         if file.filename == '':
-                            flash('No selected file')
+                            flash('No selecionaste ningun archivo(Recarga la Pagina')
                             return redirect(request.url)
                         if file and allowed_file(file.filename):
                             filename = secure_filename(file.filename)
@@ -369,10 +369,12 @@ def home():
 
                                 session["chatactivo"]=request.form["uno"]
                                 who=session["chatactivo"]
+                                n=len(Mensajes[session["username_id"]])
 
                                 if not Mensajes[session["username_id"]]==[]:
 
                                     Mensajes[session["username_id"]].clear()
+                                    n=len(Mensajes[session["username_id"]])
 
                    
 
@@ -433,6 +435,7 @@ def home():
                                         x=len(MensajeE)-3
                                                                         
                                         Mensajes[session["username_id"]].append(["E",MensajeE[:x],"N"])
+    n=len(Mensajes[session["username_id"]])
 
 
                     
