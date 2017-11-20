@@ -31,6 +31,7 @@ passwords=[]
 amigos=[]
 Mensajes=[]
 Solicitudes=[]
+Enlinea=[]
 
 who="Agrega un usuario para comenzar 😉"
 
@@ -99,7 +100,7 @@ if Mensajes==[]:
 
 
 def index():
-    global usuarios,passwords,who,amigos,Mensajes,Solicitudes
+    global usuarios,passwords,who,amigos,Mensajes,Solicitudes,Enlinea
     formulario = forms.CommentForm(request.form)
     title = 'Tellme!'
     usuario=formulario.username.data
@@ -161,10 +162,12 @@ def login_page():
 
 
                     if user==usuario:
-                        session["Logged"]=True
                         session["username_id"]=i
                     i+=1
                 session["username"]=usuario
+                session["Logged"]=True
+                Enlinea.append(usuario)
+
 
 
                 return redirect(url_for('home'))
@@ -182,10 +185,13 @@ def login_page():
 
 def home():
     pass
-    global usuarios, amigos,Mensajes,who,Solicitudes
+    global usuarios, amigos,Mensajes,who,Solicitudes,Enlinea
+
+    Estado=""
+
     now = datetime.datetime.now()
     hora=str(now.hour)+":"+str(now.minute)
-    target1 = os.path.join(APP_ROOT, "static/img/")
+    D = os.path.join(APP_ROOT, "static/img/")
     n=len(Mensajes[session["username_id"]])
 
     if not Mensajes[session["username_id"]]==[]:
@@ -246,6 +252,10 @@ def home():
 
                 session["chatactivo"]=usuarioA
                 who=session["chatactivo"]
+                if who in Enlinea:
+                    Estado="En linea"
+                else:
+                    Estado="Fuera de linea"
                 index1=usuarios.index(usuarioA)
                 amigos[index1].append(usuarios[session["username_id"]])
                 amigos[session["username_id"]].append(usuarioA)
@@ -313,6 +323,10 @@ def home():
 
                     msg=request.form["lol"]+"   "+"("+str(hora)+"|"+str(localizacion['city'])+")"+"|N|"
                     who=session["chatactivo"]
+                    if who in Enlinea:
+                        Estado="En linea"
+                    else:
+                        Estado="Fuera de linea"
 
                     a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
                     b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","a")            
@@ -343,7 +357,7 @@ def home():
                         if file and allowed_file(file.filename):
                             filename = secure_filename(file.filename)
                                 
-                            destination = "/".join([target1, filename])
+                            destination = "/".join([D, filename])
                             file.save(destination)
                             print(filename)
                             localizacion = requests.get('http://ip-api.com/json/').json()
@@ -351,6 +365,10 @@ def home():
 
                             msg=filename+"|M|"
                             who=session["chatactivo"]
+                            if who in Enlinea:
+                                Estado="En linea"
+                            else:
+                                Estado="Fuera de linea"
 
                             a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
                             b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","a")            
@@ -361,6 +379,11 @@ def home():
                             b.close()
                     else:
 
+                        if request.form["uno"]=="Salir":
+                            Enlinea.remove(session["username"])
+                            return redirect(url_for('login_page'))
+
+
                         if request.form["uno"]!="Añadir":
 
 
@@ -369,6 +392,10 @@ def home():
 
                                 session["chatactivo"]=request.form["uno"]
                                 who=session["chatactivo"]
+                                if who in Enlinea:
+                                    Estado="En linea"
+                                else:
+                                    Estado="Fuera de linea"
                                 n=len(Mensajes[session["username_id"]])
 
                                 if not Mensajes[session["username_id"]]==[]:
@@ -462,7 +489,7 @@ def home():
 
         
 
-    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Mensajes=Mensajes,who=who,hora=hora,Solicitudes=Solicitudes,n=n)
+    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Mensajes=Mensajes,who=who,hora=hora,Solicitudes=Solicitudes,n=n,Estado=Estado)
 @app.route('/home2',methods=['GET','POST'])
 
 

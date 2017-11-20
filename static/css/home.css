@@ -198,6 +198,20 @@ margin:2px; padding:2px;
     position: absolute;
     left: 72%;
 }
+.boton7{
+    font-size: 13px;
+    border-radius: 10px;
+    background-color: #a3fff1;
+    background-image: url(icono2.svg);
+    border: 0px;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    right: 0;
+    top:14px;
+}
+
+
 .contacto{
     font-size:13px;
     font-family:Segoe ,UI;
