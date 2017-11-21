@@ -113,7 +113,9 @@
 		<div class="caja1">
 			<div class="info">
 				<label>{{ who}}</label>
-				(<label>{{(Estado)}}</label>)
+				{% if Estado!=""%}
+					(<label>{{(Estado)}}</label>)
+				{%endif%}
 				<form method="post">
 
 					<button type="submit" class="boton7" name="uno" value="Salir"></button>
@@ -159,8 +161,7 @@
 
 		</div>
 		<div class="cajatexto">
-			<form method="post" enctype=multipart/form-data >
-						
+			<form method="post" enctype=multipart/form-data >						
 				<input type="text" class="entrada" name="lol" placeholder="Write something...">
 				<input type="submit" class="boton5" name="uno" value="Enviar" />
 				<input type=file class="archivos" name="file" id="file">

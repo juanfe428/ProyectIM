@@ -165,7 +165,6 @@ def login_page():
                         session["username_id"]=i
                     i+=1
                 session["username"]=usuario
-                session["Logged"]=True
                 Enlinea.append(usuario)
 
 
@@ -186,6 +185,8 @@ def login_page():
 def home():
     pass
     global usuarios, amigos,Mensajes,who,Solicitudes,Enlinea
+
+
 
     Estado=""
 
@@ -352,7 +353,7 @@ def home():
                             # if user does not select file, browser also
                             # submit a empty part without filename
                         if file.filename == '':
-                            flash('No selecionaste ningun archivo(Recarga la Pagina')
+                            flash('No selecionaste ningun archivo(Recarga la Pagina)')
                             return redirect(request.url)
                         if file and allowed_file(file.filename):
                             filename = secure_filename(file.filename)
@@ -464,30 +465,6 @@ def home():
                                         Mensajes[session["username_id"]].append(["E",MensajeE[:x],"N"])
     n=len(Mensajes[session["username_id"]])
 
-
-                    
-
-
-
-                    
-
-
-
-
-
-
-
-
-
-    
-        
-    
-
-
-
-
-
-        
 
     return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Mensajes=Mensajes,who=who,hora=hora,Solicitudes=Solicitudes,n=n,Estado=Estado)
 @app.route('/home2',methods=['GET','POST'])
