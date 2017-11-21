@@ -43,59 +43,30 @@ if Mensajes==[]:
         i=int(numero)
     x=0
     while x!=i:
-        amigos.append([])
-        Solicitudes.append([])
         Mensajes.append([])
         x+=1
 
     a.close()
 
 
-    f=open("Archivos/amigos.txt","r")
-    texto=f.readlines()
-    f.close()
-    for palabras in texto:
-        palabras=palabras.split("/")
-        for mas in palabras:
-            mover=len(mas)
-            if mas!="" and mas!="\n":
-                index=int(mas[mover-1])
-                final=mas.split(mas[mover-1])
-                amigos[index].append(mas[:-1])
+#Carga los amigos de cada usuario
+f=open("Archivos/amigos.txt","r")
+amigos=json.loads(f.read())
+f.close()
 
-    #Carga de un archivo las solicitudes que tenga cada usuario
-    f=open("Archivos/Solicitudes.txt","r")
-    texto=f.readlines()
-    f.close()
-    for palabras in texto:
-        palabras=palabras.split("/")
-        for mas in palabras:
-            mover=len(mas)
-            if mas!="" and mas!="\n":
-                index=int(mas[mover-1])
-                final=mas.split(mas[mover-1])
-                Solicitudes[index].append(mas[:-1])
+#Carga de un archivo las solicitudes que tenga cada usuario
+f=open("Archivos/Solicitudes.txt","r")
+Solicitudes=json.loads(f.read())
+f.close()
 
 #Carga los usaurios ya registrados de un archivo texto
-    f=open("Archivos/usuarios.txt","r")
-    texto=f.readlines()
-    f.close()
-    for palabrasos in texto:
-        palabras=palabrasos.split("-")
-        for usuario in palabras:
-            if usuario!= "":
-                usuarios.append(usuario)
-
+f=open("Archivos/usuarios.txt","r")
+usuarios=json.loads(f.read())
+f.close()
 #carga las contraseñas de un archivo texto
-    f=open("Archivos/passwords.txt","r")
-    texto=f.readlines()
-    f.close()
-    for palabrasos in texto:
-        palabras=palabrasos.split("-")
-        for pswd in palabras:
-            if pswd!= "":
-                passwords.append(pswd)
-
+f=open("Archivos/passwords.txt","r")
+passwords=json.loads(f.read())
+f.close()
 @app.route('/register', methods=['GET','POST'])
 
 
@@ -112,19 +83,49 @@ def index():
         else:
             usuarios.append(usuario)
             passwords.append(password)
-            f=open("Archivos/usuarios.txt","a")
-            f.write(str(usuario)+"-")
+            f=open("Archivos/usuarios.txt","r")
+            lista= json.loads(f.read())
+            lista.append(str(usuario))
             f.close()
-            f=open("Archivos/passwords.txt","a")
-            f.write(str(password)+"-")
+            f=open("Archivos/usuarios.txt","w")
+            f.write(json.dumps(lista))
             f.close()
+            #Abre el archivo y lee una lista con ayuda de json y a agrega un elemento y se vuelve a cargar al archivo texto
+            f=open("Archivos/passwords.txt","r")
+            lista= json.loads(f.read())
+            lista.append(str(password))
+            f.close()
+            f=open("Archivos/passwords.txt","w")
+            f.write(json.dumps(lista))
+            f.close()
+
+
             i=0
+            f=open("Archivos/Solicitudes.txt","r")
+            lista=json.loads(f.read())
+            lista.append([])
+            f.close()
+
+            f=open("Archivos/Solicitudes.txt","w")
+            f.write(json.dumps(lista))
+            f.close()
+
+            f=open("Archivos/amigos.txt","r")
+            lista=json.loads(f.read())
+            lista.append([])
+            f.close()
+
+            f=open("Archivos/amigos.txt","w")
+            f.write(json.dumps(lista))
+            f.close()
+
             amigos.append([])
-
-
             Solicitudes.append([])
+
+
             flash("Se ha registrado")
             a=open("Archivos/len.txt","w")
+
 
             a.write(str(len(amigos)))
             a.close()
@@ -217,13 +218,16 @@ def home():
 
             f=open("Archivos/Solicitudes.txt","r")
 
-            text=f.read()
+            lista=json.loads(f.read())
+            lista[session["username_id"]].remove(usuarioE)
             f.close()
 
             f=open("Archivos/Solicitudes.txt","w")
-            borrar=text.replace(str(usuarioE)+str(index)+"/","")
-            f.write(borrar)
+            f.write(json.dumps(lista))
             f.close()
+
+
+
 
             Solicitudes[session["username_id"]].remove(usuarioE)
         else:
@@ -239,14 +243,14 @@ def home():
                 index=session["username_id"]
 
                 f=open("Archivos/Solicitudes.txt","r")
-
-                text=f.read()
+                lista=json.loads(f.read())
+                lista[session["username_id"]].remove(usuarioA)
                 f.close()
 
                 f=open("Archivos/Solicitudes.txt","w")
-                borrar=text.replace(str(usuarioA)+str(index)+"/","")
-                f.write(borrar)
+                f.write(json.dumps(lista))
                 f.close()
+
 
 
 
@@ -262,12 +266,27 @@ def home():
                 amigos[session["username_id"]].append(usuarioA)
                 a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","w")
                 b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","w")
-                f=open("Archivos/Amigos.txt","a")
-                f.write(str(usuarioA)+str(session["username_id"])+"/")
-                f.write(str(usuarios[session["username_id"]])+str(index1)+"/")
+                a.write(json.dumps([]))
+                b.write(json.dumps([]))
 
 
+
+
+                f=open("Archivos/Amigos.txt","r")
+                lista=json.loads(f.read())
+                lista[index1].append(usuarios[session["username_id"]])
+                lista[session["username_id"]].append(usuarioA)
                 f.close()
+
+
+                f=open("Archivos/Amigos.txt","w")
+                f.write(json.dumps(lista))
+                f.close()
+
+
+
+
+
                 a.close()
                 b.close()
 
@@ -295,10 +314,14 @@ def home():
 
                                     Solicitudes[index1].append(usuarios[session["username_id"]])
                                     flash("se ha enviao solicitud a :"+str(buscarusuario))
-                                    f=open("Archivos/Solicitudes.txt","a")
-
-                                    f.write(str(usuarios[session["username_id"]])+str(index1)+"/")
+                                    f=open("Archivos/Solicitudes.txt","r")
+                                    lista=json.loads(f.read())
+                                    lista[index1].append(usuarios[session["username_id"]])
                                     f.close()
+
+                                    f=open("Archivos/Solicitudes.txt","w")
+                                    f.write(json.dumps(lista))
+
 
                             else:
                                 flash("Ya se ha enviado solicitud")
@@ -322,22 +345,36 @@ def home():
 
 
 
-                    msg=request.form["lol"]+"   "+"("+str(hora)+"|"+str(localizacion['city'])+")"+"|N|"
+                    msg=request.form["lol"]+"   "+"("+str(hora)+"|"+str(localizacion['city'])+")"
                     who=session["chatactivo"]
                     if who in Enlinea:
                         Estado="En linea"
                     else:
                         Estado="Fuera de linea"
 
-                    a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
-                    b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","a")            
+                    a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","r")
+                    b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","r")            
 
 
-                    a.write("-"+str(msg)+"-")
-                    b.write("/"+str(msg)+"/")
+                    lista1=json.loads(a.read())
 
+                    lista1.append(["E",str(msg),"|N|"])
+
+                    lista2=json.loads(b.read())
+                    lista2.append(["R",str(msg),"|N|"])
                     a.close()
                     b.close()
+
+                    a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","w")
+                    b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","w")
+                    a.write(json.dumps(lista1))
+                    b.write(json.dumps(lista2))  
+                    a.close()
+                    b.close()
+                    
+
+
+
 
 
                 else:
@@ -364,20 +401,30 @@ def home():
                             localizacion = requests.get('http://ip-api.com/json/').json()
 
 
-                            msg=filename+"|M|"
+                            msg=filename
                             who=session["chatactivo"]
                             if who in Enlinea:
                                 Estado="En linea"
                             else:
                                 Estado="Fuera de linea"
 
-                            a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","a")
-                            b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","a")            
-                            a.write("-"+str(msg)+"-")
-                            b.write("/"+str(msg)+"/")
+                            a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","r")
+                            b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","r")            
+                            lista1=json.loads(a.read())
 
+                            lista1.append(["E",str(msg),"|M|"])
+                            lista2=json.loads(b.read())
+                            lista2.append(["R",str(msg),"|M|"])
                             a.close()
                             b.close()
+                            a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt","w")
+                            b=open("Conversaciones/"+str(session["chatactivo"])+"-"+str(session["username"])+".txt","w")
+                            a.write(json.dumps(lista1))
+                            b.write(json.dumps(lista2))  
+                            a.close()
+                            b.close()
+
+                           
                     else:
 
                         if request.form["uno"]=="Salir":
@@ -415,54 +462,14 @@ def home():
                                 
                     a=open("Conversaciones/"+str(session["username"])+"-"+str(session["chatactivo"])+".txt")
 
-                    texto=a.readlines()
+                    lista=json.loads(a.read())
+                    for elemento in lista:
 
-                    a.close()
-                    for palabras in texto:
-                        palabras=palabras.split("-")
-                        for mensajes1 in palabras:
+                        Mensajes[session["username_id"]].append(elemento)
 
-                                                                
-                            if "/" in mensajes1 :
-                                mensajes1=mensajes1.split("/")
-                                for mensajes1 in mensajes1:
-                                    if "|M|" in mensajes1:
+                    n=len(Mensajes[session["username_id"]])
+                    print(Mensajes)
 
-                                        if mensajes1!= "\n" and mensajes1!=""  :
-                                            MensajeR=mensajes1
-                                            x=len(MensajeR)-3
-                                            Mensajes[session["username_id"]].append(["R",MensajeR[:x],"M"])
-
-                                            pass
-                                    else:
-                                        if mensajes1!= "\n" and mensajes1!="" :
-
-                                
-
-                                            MensajeR=mensajes1
-                                            x=len(MensajeR)-3
-                                                                                
-                                            Mensajes[session["username_id"]].append(["R",MensajeR[:x],"N"])
-                                            pass
-                            else:
-                                if "|M|" in mensajes1:
-                                    if mensajes1!= "\n" and mensajes1!="":
-                                        MensajeE=mensajes1
-                                        x=len(MensajeE)-3
-                                        
-
-                                        Mensajes[session["username_id"]].append(["E",MensajeE[:x],"M"])
-                                        pass
-                                else:
-
-                                                                    
-                                                                    
-                                    if mensajes1!= "\n" and mensajes1!="":
-
-                                        MensajeE=mensajes1
-                                        x=len(MensajeE)-3
-                                                                        
-                                        Mensajes[session["username_id"]].append(["E",MensajeE[:x],"N"])
     n=len(Mensajes[session["username_id"]])
 
 

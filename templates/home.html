@@ -127,7 +127,7 @@
 		 	{% if Mensajes[contador]!=[]%}
 			
 	           {% for datos in range(n) %}
-	           	{%if Mensajes[contador][datos][2]=="N"%}
+	           	{%if Mensajes[contador][datos][2]=="|N|"%}
 	           		{%if Mensajes[contador][datos][0]== "E"%}
 	            		<label class="chatcontainer2">{{Mensajes[contador][datos][1]}}</label>
 	           		{%endif%}
@@ -135,7 +135,7 @@
 	           			<label class="chatcontainer">{{Mensajes[contador][datos][1]}}</label>
 	           		{%endif%}
 	           	{%endif%}
-	           	{%if Mensajes[contador][datos][2]=="M"%}
+	           	{%if Mensajes[contador][datos][2]=="|M|"%}
 	           		{%if Mensajes[contador][datos][0]== "E"%}
 	           			<div class="chatcontainer2">
 	           				<img src = "{{url_for('static', filename ='img/'+ Mensajes[contador][datos][1] )}}" width = "400" height= "300">
