@@ -6,8 +6,9 @@ from werkzeug.utils import secure_filename
 import datetime
 import requests
 import os
-import forms
 import json
+
+
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 ALLOWED_EXTENSIONS = set([ 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -72,63 +73,73 @@ f.close()
 
 def index():
     global usuarios,passwords,who,amigos,Mensajes,Solicitudes,Enlinea
-    formulario = forms.CommentForm(request.form)
     title = 'Tellme!'
-    usuario=formulario.username.data
-    password=formulario.password.data
     
-    if request.method== 'POST' and formulario.validate():
-        if usuario in usuarios:
-            flash("El usuario ya existe")
+    if request.method== 'POST':
+        if request.form["username"]!="" and request.form["password"]!="":
+            usuario=request.form["username"]
+            password=request.form["password"]
+
+            if password==request.form["password2"]:
+
+
+                if usuario in usuarios:
+                    flash("El usuario ya existe")
+                else:
+                    usuarios.append(usuario)
+                    passwords.append(password)
+                    f=open("Archivos/usuarios.txt","r")
+                    lista= json.loads(f.read())
+                    lista.append(str(usuario))
+                    f.close()
+                    f=open("Archivos/usuarios.txt","w")
+                    f.write(json.dumps(lista))
+                    f.close()
+                    #Abre el archivo y lee una lista con ayuda de json y a agrega un elemento y se vuelve a cargar al archivo texto
+                    f=open("Archivos/passwords.txt","r")
+                    lista= json.loads(f.read())
+                    lista.append(str(password))
+                    f.close()
+                    f=open("Archivos/passwords.txt","w")
+                    f.write(json.dumps(lista))
+                    f.close()
+
+
+                    i=0
+                    f=open("Archivos/Solicitudes.txt","r")
+                    lista=json.loads(f.read())
+                    lista.append([])
+                    f.close()
+
+                    f=open("Archivos/Solicitudes.txt","w")
+                    f.write(json.dumps(lista))
+                    f.close()
+
+                    f=open("Archivos/amigos.txt","r")
+                    lista=json.loads(f.read())
+                    lista.append([])
+                    f.close()
+
+                    f=open("Archivos/amigos.txt","w")
+                    f.write(json.dumps(lista))
+                    f.close()
+
+                    amigos.append([])
+                    Solicitudes.append([])
+                    Mensajes.append([])
+
+
+                    a=open("Archivos/len.txt","w")
+
+
+                    a.write(str(len(amigos)))
+                    a.close()
+                    flash("Se ha registrado")
+                    return redirect(url_for('login_page'))
+            else:
+                flash("Las contraseñas deben coincidir")
         else:
-            usuarios.append(usuario)
-            passwords.append(password)
-            f=open("Archivos/usuarios.txt","r")
-            lista= json.loads(f.read())
-            lista.append(str(usuario))
-            f.close()
-            f=open("Archivos/usuarios.txt","w")
-            f.write(json.dumps(lista))
-            f.close()
-            #Abre el archivo y lee una lista con ayuda de json y a agrega un elemento y se vuelve a cargar al archivo texto
-            f=open("Archivos/passwords.txt","r")
-            lista= json.loads(f.read())
-            lista.append(str(password))
-            f.close()
-            f=open("Archivos/passwords.txt","w")
-            f.write(json.dumps(lista))
-            f.close()
-
-
-            i=0
-            f=open("Archivos/Solicitudes.txt","r")
-            lista=json.loads(f.read())
-            lista.append([])
-            f.close()
-
-            f=open("Archivos/Solicitudes.txt","w")
-            f.write(json.dumps(lista))
-            f.close()
-
-            f=open("Archivos/amigos.txt","r")
-            lista=json.loads(f.read())
-            lista.append([])
-            f.close()
-
-            f=open("Archivos/amigos.txt","w")
-            f.write(json.dumps(lista))
-            f.close()
-
-            amigos.append([])
-            Solicitudes.append([])
-
-
-            flash("Se ha registrado")
-            a=open("Archivos/len.txt","w")
-
-
-            a.write(str(len(amigos)))
-            a.close()
+            flash("llena correctamente el formulario")
 
 
             return redirect(url_for('login_page'))
@@ -136,7 +147,7 @@ def index():
             
           
 
-    return render_template('index.html', title=title, form=formulario)
+    return render_template('index.html', title=title)
     
 
 @app.route('/',methods=['GET','POST'])
@@ -146,40 +157,44 @@ def login_page():
 
     title = 'Tellme!'
 
-    formulario = forms.LoginForm(request.form)
-    usuario=formulario.username.data
-    password=formulario.password.data
-    if request.method== 'POST' and formulario.validate():
-
-        if usuario in usuarios and password in passwords:
-
-            indice=usuarios.index(usuario)
-
-
-            if passwords[indice]==password:
-            #if usuarios.index(usuario)==passwords.index(password)  :
-                i=0
-                for user in usuarios:
-
-
-                    if user==usuario:
-                        session["username_id"]=i
-                    i+=1
-                session["username"]=usuario
-                Enlinea.append(usuario)
+    if request.method== 'POST':
+        if request.form["username"]!="" and request.form["password"]!="":
+            usuario=request.form["username"]
+            password=request.form["password"]
 
 
 
-                return redirect(url_for('home'))
+            if usuario in usuarios and password in passwords:
+
+                indice=usuarios.index(usuario)
+
+
+                if passwords[indice]==password:
+                #if usuarios.index(usuario)==passwords.index(password)  :
+                    i=0
+                    for user in usuarios:
+
+
+                        if user==usuario:
+                            session["username_id"]=i
+                        i+=1
+                    session["username"]=usuario
+                    Enlinea.append(usuario)
+
+
+
+                    return redirect(url_for('home'))
+                else:
+                    flash("usuario o contrasena incorrecta")
             else:
-                flash("usuario o contrasena incorrecta")
+                flash("Contrasena o usario incorrecto")
         else:
 
             flash('Contrasena o usario incorrecto')
 
 
 
-    return render_template("login.html",form=formulario,title=title)
+    return render_template("login.html",title=title)
 @app.route('/home',methods=['GET','POST'])
 
 
@@ -203,7 +218,6 @@ def home():
 
 
     entries = {'datos1': usuarios[session["username_id"]], 'datos2': session["username_id"]}
-    formulario = forms.Add(request.form)
     contador=session["username_id"]
 
     if request.method=='POST':
@@ -250,10 +264,6 @@ def home():
                 f=open("Archivos/Solicitudes.txt","w")
                 f.write(json.dumps(lista))
                 f.close()
-
-
-
-
 
                 session["chatactivo"]=usuarioA
                 who=session["chatactivo"]
@@ -313,7 +323,7 @@ def home():
                                 if not session["username"] in Solicitudes[index1]:
 
                                     Solicitudes[index1].append(usuarios[session["username_id"]])
-                                    flash("se ha enviao solicitud a :"+str(buscarusuario))
+                                    flash("se ha enviao solicitud a "+str(buscarusuario))
                                     f=open("Archivos/Solicitudes.txt","r")
                                     lista=json.loads(f.read())
                                     lista[index1].append(usuarios[session["username_id"]])
@@ -451,12 +461,6 @@ def home():
                                     Mensajes[session["username_id"]].clear()
                                     n=len(Mensajes[session["username_id"]])
 
-                   
-
-
-                            
-
-
 
                 if amigos[session["username_id"]]!=[] and who in amigos[session["username_id"]]:
                                 
@@ -473,7 +477,7 @@ def home():
     n=len(Mensajes[session["username_id"]])
 
 
-    return render_template("home.html", form=formulario,amigos=amigos,contador=contador,entries=entries,Mensajes=Mensajes,who=who,hora=hora,Solicitudes=Solicitudes,n=n,Estado=Estado)
+    return render_template("home.html",amigos=amigos,contador=contador,entries=entries,Mensajes=Mensajes,who=who,hora=hora,Solicitudes=Solicitudes,n=n,Estado=Estado)
 @app.route('/home2',methods=['GET','POST'])
 
 

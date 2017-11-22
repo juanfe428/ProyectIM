@@ -16,11 +16,12 @@
 
 	 	<form class="form-signin" method="post">
 	 		<h2 class="form-signin-heading">Regístrate</h2>
-			{{ render_field(form.username, class="form-control", placeholder="Username") }}
+			<input type="text" name="username" class="form-control" placeholder="Username">
+
 			<p class="help-block text-danger"></p>
-			{{ render_field(form.password, class="form-control", placeholder="Contrasena") }}
+			<input type="password" name="password" class="form-control" placeholder="Contaseña">
 			<p class="help-block text-danger"></p>
-			{{ render_field(form.confirm, class="form-control", placeholder="Confirmar contraseña") }}
+			<input type="password" name="password2" class="form-control" placeholder="Confirmar contraseña">
 			<p class="help-block text-danger"></p>
 			<input class="boton2" type="submit", value="Registrarme">
 			

@@ -1,1 +1,1 @@
-[]
+["usuario1", "usuario2"]
